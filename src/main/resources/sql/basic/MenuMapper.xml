@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ks.sys.menu.mapper.MenuMapper">
+
+    <select id="selectVo" resultType="org.ks.sys.vo.MenuVo">
+        SELECT menu_id id,menu_name name,father_id pId
+        FROM tbl_menu
+    </select>
+
+    <update id="updateMenuFlag" parameterType="org.ks.sys.menu.dto.MenuFlagDto">
+        UPDATE tbl_menu
+        <if test="useFlag == 1" >
+            set use_flag = 0
+        </if>
+        <if test="useFlag == 0" >
+            set use_flag = 1
+        </if>
+        where menu_id = #{menuId}
+    </update>
+
+</mapper>

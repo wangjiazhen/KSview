@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ks.sys.mapper.TblCtrlInfoMapper">
+  <resultMap id="BaseResultMap" type="org.ks.sys.po.TblCtrlInfo">
+    <id column="ctrl_id" jdbcType="BIGINT" property="ctrlId" />
+    <result column="ctrl_addr" jdbcType="VARCHAR" property="ctrlAddr" />
+    <result column="ctrl_name" jdbcType="VARCHAR" property="ctrlName" />
+    <result column="ctrl_desc" jdbcType="VARCHAR" property="ctrlDesc" />
+    <result column="use_flag" jdbcType="INTEGER" property="useFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_acct" jdbcType="VARCHAR" property="createAcct" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_acct" jdbcType="VARCHAR" property="updateAcct" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ctrl_id, ctrl_addr, ctrl_name, ctrl_desc, use_flag, create_time, create_acct, update_time, 
+    update_acct
+  </sql>
+  <select id="selectByExample" parameterType="org.ks.sys.po.TblCtrlInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tbl_ctrl_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_ctrl_info
+    where ctrl_id = #{ctrlId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tbl_ctrl_info
+    where ctrl_id = #{ctrlId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.ks.sys.po.TblCtrlInfoExample">
+    delete from tbl_ctrl_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.ks.sys.po.TblCtrlInfo">
+    insert into tbl_ctrl_info (ctrl_id, ctrl_addr, ctrl_name, 
+      ctrl_desc, use_flag, create_time, 
+      create_acct, update_time, update_acct
+      )
+    values (#{ctrlId,jdbcType=BIGINT}, #{ctrlAddr,jdbcType=VARCHAR}, #{ctrlName,jdbcType=VARCHAR}, 
+      #{ctrlDesc,jdbcType=VARCHAR}, #{useFlag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createAcct,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateAcct,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.ks.sys.po.TblCtrlInfo">
+    insert into tbl_ctrl_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ctrlId != null">
+        ctrl_id,
+      </if>
+      <if test="ctrlAddr != null">
+        ctrl_addr,
+      </if>
+      <if test="ctrlName != null">
+        ctrl_name,
+      </if>
+      <if test="ctrlDesc != null">
+        ctrl_desc,
+      </if>
+      <if test="useFlag != null">
+        use_flag,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createAcct != null">
+        create_acct,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateAcct != null">
+        update_acct,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ctrlId != null">
+        #{ctrlId,jdbcType=BIGINT},
+      </if>
+      <if test="ctrlAddr != null">
+        #{ctrlAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="ctrlName != null">
+        #{ctrlName,jdbcType=VARCHAR},
+      </if>
+      <if test="ctrlDesc != null">
+        #{ctrlDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="useFlag != null">
+        #{useFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAcct != null">
+        #{createAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAcct != null">
+        #{updateAcct,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.ks.sys.po.TblCtrlInfoExample" resultType="java.lang.Long">
+    select count(*) from tbl_ctrl_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tbl_ctrl_info
+    <set>
+      <if test="record.ctrlId != null">
+        ctrl_id = #{record.ctrlId,jdbcType=BIGINT},
+      </if>
+      <if test="record.ctrlAddr != null">
+        ctrl_addr = #{record.ctrlAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ctrlName != null">
+        ctrl_name = #{record.ctrlName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ctrlDesc != null">
+        ctrl_desc = #{record.ctrlDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useFlag != null">
+        use_flag = #{record.useFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createAcct != null">
+        create_acct = #{record.createAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateAcct != null">
+        update_acct = #{record.updateAcct,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tbl_ctrl_info
+    set ctrl_id = #{record.ctrlId,jdbcType=BIGINT},
+      ctrl_addr = #{record.ctrlAddr,jdbcType=VARCHAR},
+      ctrl_name = #{record.ctrlName,jdbcType=VARCHAR},
+      ctrl_desc = #{record.ctrlDesc,jdbcType=VARCHAR},
+      use_flag = #{record.useFlag,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_acct = #{record.createAcct,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_acct = #{record.updateAcct,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.ks.sys.po.TblCtrlInfo">
+    update tbl_ctrl_info
+    <set>
+      <if test="ctrlAddr != null">
+        ctrl_addr = #{ctrlAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="ctrlName != null">
+        ctrl_name = #{ctrlName,jdbcType=VARCHAR},
+      </if>
+      <if test="ctrlDesc != null">
+        ctrl_desc = #{ctrlDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="useFlag != null">
+        use_flag = #{useFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAcct != null">
+        create_acct = #{createAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAcct != null">
+        update_acct = #{updateAcct,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ctrl_id = #{ctrlId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.ks.sys.po.TblCtrlInfo">
+    update tbl_ctrl_info
+    set ctrl_addr = #{ctrlAddr,jdbcType=VARCHAR},
+      ctrl_name = #{ctrlName,jdbcType=VARCHAR},
+      ctrl_desc = #{ctrlDesc,jdbcType=VARCHAR},
+      use_flag = #{useFlag,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_acct = #{createAcct,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_acct = #{updateAcct,jdbcType=VARCHAR}
+    where ctrl_id = #{ctrlId,jdbcType=BIGINT}
+  </update>
+</mapper>

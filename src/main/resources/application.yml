@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active: prod
+##配置热部署启动
+#  devtools:
+#    restart:
+#      enabled: true

@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ks.sys.mapper.TblMsgLogMapper">
+  <resultMap id="BaseResultMap" type="org.ks.sys.po.TblMsgLog">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="api_no" jdbcType="VARCHAR" property="apiNo" />
+    <result column="api_type" jdbcType="VARCHAR" property="apiType" />
+    <result column="api_desc" jdbcType="VARCHAR" property="apiDesc" />
+    <result column="api_start_time" jdbcType="TIMESTAMP" property="apiStartTime" />
+    <result column="api_req_msg" jdbcType="VARCHAR" property="apiReqMsg" />
+    <result column="api_res_msg" jdbcType="VARCHAR" property="apiResMsg" />
+    <result column="api_flag" jdbcType="INTEGER" property="apiFlag" />
+    <result column="api_end_time" jdbcType="TIMESTAMP" property="apiEndTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, api_no, api_type, api_desc, api_start_time, api_req_msg, api_res_msg, api_flag, 
+    api_end_time
+  </sql>
+  <select id="selectByExample" parameterType="org.ks.sys.po.TblMsgLogExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tbl_msg_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_msg_log
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tbl_msg_log
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.ks.sys.po.TblMsgLogExample">
+    delete from tbl_msg_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.ks.sys.po.TblMsgLog">
+    insert into tbl_msg_log (id, api_no, api_type, 
+      api_desc, api_start_time, api_req_msg, 
+      api_res_msg, api_flag, api_end_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{apiNo,jdbcType=VARCHAR}, #{apiType,jdbcType=VARCHAR}, 
+      #{apiDesc,jdbcType=VARCHAR}, #{apiStartTime,jdbcType=TIMESTAMP}, #{apiReqMsg,jdbcType=VARCHAR}, 
+      #{apiResMsg,jdbcType=VARCHAR}, #{apiFlag,jdbcType=INTEGER}, #{apiEndTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.ks.sys.po.TblMsgLog">
+    insert into tbl_msg_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="apiNo != null">
+        api_no,
+      </if>
+      <if test="apiType != null">
+        api_type,
+      </if>
+      <if test="apiDesc != null">
+        api_desc,
+      </if>
+      <if test="apiStartTime != null">
+        api_start_time,
+      </if>
+      <if test="apiReqMsg != null">
+        api_req_msg,
+      </if>
+      <if test="apiResMsg != null">
+        api_res_msg,
+      </if>
+      <if test="apiFlag != null">
+        api_flag,
+      </if>
+      <if test="apiEndTime != null">
+        api_end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="apiNo != null">
+        #{apiNo,jdbcType=VARCHAR},
+      </if>
+      <if test="apiType != null">
+        #{apiType,jdbcType=VARCHAR},
+      </if>
+      <if test="apiDesc != null">
+        #{apiDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="apiStartTime != null">
+        #{apiStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="apiReqMsg != null">
+        #{apiReqMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="apiResMsg != null">
+        #{apiResMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="apiFlag != null">
+        #{apiFlag,jdbcType=INTEGER},
+      </if>
+      <if test="apiEndTime != null">
+        #{apiEndTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.ks.sys.po.TblMsgLogExample" resultType="java.lang.Long">
+    select count(*) from tbl_msg_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tbl_msg_log
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apiNo != null">
+        api_no = #{record.apiNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apiType != null">
+        api_type = #{record.apiType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apiDesc != null">
+        api_desc = #{record.apiDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apiStartTime != null">
+        api_start_time = #{record.apiStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.apiReqMsg != null">
+        api_req_msg = #{record.apiReqMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apiResMsg != null">
+        api_res_msg = #{record.apiResMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.apiFlag != null">
+        api_flag = #{record.apiFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.apiEndTime != null">
+        api_end_time = #{record.apiEndTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tbl_msg_log
+    set id = #{record.id,jdbcType=VARCHAR},
+      api_no = #{record.apiNo,jdbcType=VARCHAR},
+      api_type = #{record.apiType,jdbcType=VARCHAR},
+      api_desc = #{record.apiDesc,jdbcType=VARCHAR},
+      api_start_time = #{record.apiStartTime,jdbcType=TIMESTAMP},
+      api_req_msg = #{record.apiReqMsg,jdbcType=VARCHAR},
+      api_res_msg = #{record.apiResMsg,jdbcType=VARCHAR},
+      api_flag = #{record.apiFlag,jdbcType=INTEGER},
+      api_end_time = #{record.apiEndTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.ks.sys.po.TblMsgLog">
+    update tbl_msg_log
+    <set>
+      <if test="apiNo != null">
+        api_no = #{apiNo,jdbcType=VARCHAR},
+      </if>
+      <if test="apiType != null">
+        api_type = #{apiType,jdbcType=VARCHAR},
+      </if>
+      <if test="apiDesc != null">
+        api_desc = #{apiDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="apiStartTime != null">
+        api_start_time = #{apiStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="apiReqMsg != null">
+        api_req_msg = #{apiReqMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="apiResMsg != null">
+        api_res_msg = #{apiResMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="apiFlag != null">
+        api_flag = #{apiFlag,jdbcType=INTEGER},
+      </if>
+      <if test="apiEndTime != null">
+        api_end_time = #{apiEndTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.ks.sys.po.TblMsgLog">
+    update tbl_msg_log
+    set api_no = #{apiNo,jdbcType=VARCHAR},
+      api_type = #{apiType,jdbcType=VARCHAR},
+      api_desc = #{apiDesc,jdbcType=VARCHAR},
+      api_start_time = #{apiStartTime,jdbcType=TIMESTAMP},
+      api_req_msg = #{apiReqMsg,jdbcType=VARCHAR},
+      api_res_msg = #{apiResMsg,jdbcType=VARCHAR},
+      api_flag = #{apiFlag,jdbcType=INTEGER},
+      api_end_time = #{apiEndTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

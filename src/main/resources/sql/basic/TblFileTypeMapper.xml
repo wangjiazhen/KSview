@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ks.sys.mapper.TblFileTypeMapper">
+  <resultMap id="BaseResultMap" type="org.ks.sys.po.TblFileType">
+    <id column="type_id" jdbcType="BIGINT" property="typeId" />
+    <result column="type_name" jdbcType="VARCHAR" property="typeName" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="sys_code" jdbcType="VARCHAR" property="sysCode" />
+    <result column="use_flag" jdbcType="INTEGER" property="useFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_acct" jdbcType="VARCHAR" property="createAcct" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_acct" jdbcType="VARCHAR" property="updateAcct" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    type_id, type_name, parent_id, sys_code, use_flag, create_time, create_acct, update_time, 
+    update_acct
+  </sql>
+  <select id="selectByExample" parameterType="org.ks.sys.po.TblFileTypeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tbl_file_type
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_file_type
+    where type_id = #{typeId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tbl_file_type
+    where type_id = #{typeId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.ks.sys.po.TblFileTypeExample">
+    delete from tbl_file_type
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.ks.sys.po.TblFileType">
+    insert into tbl_file_type (type_id, type_name, parent_id, 
+      sys_code, use_flag, create_time, 
+      create_acct, update_time, update_acct
+      )
+    values (#{typeId,jdbcType=BIGINT}, #{typeName,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{sysCode,jdbcType=VARCHAR}, #{useFlag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{createAcct,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateAcct,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.ks.sys.po.TblFileType">
+    insert into tbl_file_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="typeId != null">
+        type_id,
+      </if>
+      <if test="typeName != null">
+        type_name,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="sysCode != null">
+        sys_code,
+      </if>
+      <if test="useFlag != null">
+        use_flag,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createAcct != null">
+        create_acct,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateAcct != null">
+        update_acct,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="typeId != null">
+        #{typeId,jdbcType=BIGINT},
+      </if>
+      <if test="typeName != null">
+        #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="sysCode != null">
+        #{sysCode,jdbcType=VARCHAR},
+      </if>
+      <if test="useFlag != null">
+        #{useFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAcct != null">
+        #{createAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAcct != null">
+        #{updateAcct,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.ks.sys.po.TblFileTypeExample" resultType="java.lang.Long">
+    select count(*) from tbl_file_type
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tbl_file_type
+    <set>
+      <if test="record.typeId != null">
+        type_id = #{record.typeId,jdbcType=BIGINT},
+      </if>
+      <if test="record.typeName != null">
+        type_name = #{record.typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentId != null">
+        parent_id = #{record.parentId,jdbcType=BIGINT},
+      </if>
+      <if test="record.sysCode != null">
+        sys_code = #{record.sysCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useFlag != null">
+        use_flag = #{record.useFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.createAcct != null">
+        create_acct = #{record.createAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateAcct != null">
+        update_acct = #{record.updateAcct,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tbl_file_type
+    set type_id = #{record.typeId,jdbcType=BIGINT},
+      type_name = #{record.typeName,jdbcType=VARCHAR},
+      parent_id = #{record.parentId,jdbcType=BIGINT},
+      sys_code = #{record.sysCode,jdbcType=VARCHAR},
+      use_flag = #{record.useFlag,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      create_acct = #{record.createAcct,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_acct = #{record.updateAcct,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.ks.sys.po.TblFileType">
+    update tbl_file_type
+    <set>
+      <if test="typeName != null">
+        type_name = #{typeName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="sysCode != null">
+        sys_code = #{sysCode,jdbcType=VARCHAR},
+      </if>
+      <if test="useFlag != null">
+        use_flag = #{useFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createAcct != null">
+        create_acct = #{createAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAcct != null">
+        update_acct = #{updateAcct,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where type_id = #{typeId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.ks.sys.po.TblFileType">
+    update tbl_file_type
+    set type_name = #{typeName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      sys_code = #{sysCode,jdbcType=VARCHAR},
+      use_flag = #{useFlag,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_acct = #{createAcct,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_acct = #{updateAcct,jdbcType=VARCHAR}
+    where type_id = #{typeId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ks.sys.mapper.TblApprovaFileInfoMapper">
+  <resultMap id="BaseResultMap" type="org.ks.sys.po.TblApprovaFileInfo">
+    <id column="file_id" jdbcType="BIGINT" property="fileId" />
+    <result column="apply_id" jdbcType="VARCHAR" property="applyId" />
+    <result column="file_url" jdbcType="VARCHAR" property="fileUrl" />
+    <result column="use_flag" jdbcType="INTEGER" property="useFlag" />
+    <result column="create_acct" jdbcType="VARCHAR" property="createAcct" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_acct" jdbcType="VARCHAR" property="updateAcct" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    file_id, apply_id, file_url, use_flag, create_acct, create_time, update_acct, update_time
+  </sql>
+  <select id="selectByExample" parameterType="org.ks.sys.po.TblApprovaFileInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from tbl_approva_file_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tbl_approva_file_info
+    where file_id = #{fileId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tbl_approva_file_info
+    where file_id = #{fileId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="org.ks.sys.po.TblApprovaFileInfoExample">
+    delete from tbl_approva_file_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="org.ks.sys.po.TblApprovaFileInfo">
+    insert into tbl_approva_file_info (file_id, apply_id, file_url, 
+      use_flag, create_acct, create_time, 
+      update_acct, update_time)
+    values (#{fileId,jdbcType=BIGINT}, #{applyId,jdbcType=VARCHAR}, #{fileUrl,jdbcType=VARCHAR}, 
+      #{useFlag,jdbcType=INTEGER}, #{createAcct,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateAcct,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.ks.sys.po.TblApprovaFileInfo">
+    insert into tbl_approva_file_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fileId != null">
+        file_id,
+      </if>
+      <if test="applyId != null">
+        apply_id,
+      </if>
+      <if test="fileUrl != null">
+        file_url,
+      </if>
+      <if test="useFlag != null">
+        use_flag,
+      </if>
+      <if test="createAcct != null">
+        create_acct,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateAcct != null">
+        update_acct,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fileId != null">
+        #{fileId,jdbcType=BIGINT},
+      </if>
+      <if test="applyId != null">
+        #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileUrl != null">
+        #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="useFlag != null">
+        #{useFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createAcct != null">
+        #{createAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAcct != null">
+        #{updateAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="org.ks.sys.po.TblApprovaFileInfoExample" resultType="java.lang.Long">
+    select count(*) from tbl_approva_file_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update tbl_approva_file_info
+    <set>
+      <if test="record.fileId != null">
+        file_id = #{record.fileId,jdbcType=BIGINT},
+      </if>
+      <if test="record.applyId != null">
+        apply_id = #{record.applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileUrl != null">
+        file_url = #{record.fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.useFlag != null">
+        use_flag = #{record.useFlag,jdbcType=INTEGER},
+      </if>
+      <if test="record.createAcct != null">
+        create_acct = #{record.createAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateAcct != null">
+        update_acct = #{record.updateAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update tbl_approva_file_info
+    set file_id = #{record.fileId,jdbcType=BIGINT},
+      apply_id = #{record.applyId,jdbcType=VARCHAR},
+      file_url = #{record.fileUrl,jdbcType=VARCHAR},
+      use_flag = #{record.useFlag,jdbcType=INTEGER},
+      create_acct = #{record.createAcct,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_acct = #{record.updateAcct,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="org.ks.sys.po.TblApprovaFileInfo">
+    update tbl_approva_file_info
+    <set>
+      <if test="applyId != null">
+        apply_id = #{applyId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileUrl != null">
+        file_url = #{fileUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="useFlag != null">
+        use_flag = #{useFlag,jdbcType=INTEGER},
+      </if>
+      <if test="createAcct != null">
+        create_acct = #{createAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAcct != null">
+        update_acct = #{updateAcct,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where file_id = #{fileId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.ks.sys.po.TblApprovaFileInfo">
+    update tbl_approva_file_info
+    set apply_id = #{applyId,jdbcType=VARCHAR},
+      file_url = #{fileUrl,jdbcType=VARCHAR},
+      use_flag = #{useFlag,jdbcType=INTEGER},
+      create_acct = #{createAcct,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_acct = #{updateAcct,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where file_id = #{fileId,jdbcType=BIGINT}
+  </update>
+</mapper>

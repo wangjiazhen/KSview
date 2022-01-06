@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ks.sys.authmenu.mapper.AuthMenuMapper">
+    <resultMap id="BaseResultMap" type="org.ks.sys.vo.MenuVo">
+        <id column="menu_id" jdbcType="BIGINT" property="id"/>
+        <result column="menu_name" jdbcType="VARCHAR" property="label"/>
+        <result column="father_id" jdbcType="BIGINT" property="pId"></result>
+    </resultMap>
+    <resultMap id="BaseResultMapTo" type="org.ks.sys.vo.MenuVo">
+        <id column="menu_id" jdbcType="BIGINT" property="id"/>
+        <result column="menu_name" jdbcType="VARCHAR" property="name"/>
+        <result column="menu_url" jdbcType="VARCHAR" property="url"/>
+        <result column="icon" jdbcType="VARCHAR" property="icon"/>
+        <result column="father_id" jdbcType="BIGINT" property="pId"></result>
+        <result column="is_jump" jdbcType="VARCHAR" property="jsJump"/>
+    </resultMap>
+    <insert id="insertMenuByAuthId">
+        insert into tbl_auth_menu_rel (auth_id,menu_id) values
+        <foreach collection="authMenuVos" separator="," item="item" index="i">
+            (#{item.authId},#{item.menuId})
+        </foreach>
+    </insert>
+
+    <!--    <select id="selectAuthByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Long">-->
+    <!--        select auth_id,auth_name from tbl_auth where auth_id in (select auth_id from tbl_role_auth_rel where role_id = #{roleId})-->
+    <!--    </select>-->
+    <select id="selectAllMenu" resultMap="BaseResultMap">
+        select menu_id,menu_name,father_id from tbl_menu
+    </select>
+    <select id="selectMenuByAuthId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select menu_id from tbl_auth_menu_rel where auth_id = #{authId}
+    </select>
+    <select id="getFatherId" resultType="long" parameterType="java.lang.Long">
+        SELECT m.father_id from tbl_auth_menu_rel am JOIN tbl_menu m on m.menu_id = am.menu_id WHERE am.auth_id = #{authId}
+        GROUP BY father_id
+   </select>
+    <!--    <select id="selectIndexMenu" resultMap="BaseResultMapTo">-->
+    <!--        select distinct  menu.* from tbl_menu menu INNER JOIN-->
+    <!--        tbl_auth_menu_rel aMenu on menu.menu_id=aMenu.menu_id INNER JOIN-->
+    <!--        tbl_role_auth_rel rAuth on aMenu.auth_id = rAuth.auth_id INNER JOIN-->
+    <!--        tbl_group_role_rel gRole on rAuth.role_id = gRole.role_id INNER JOIN-->
+    <!--        tbl_user_group_rel uGroup on gRole.group_id = uGroup.group_id and-->
+    <!--        uGroup.user_id = #{userId} and menu.father_id = #{pId} order by seq DESC-->
+    <!--    </select>-->
+    <select id="selectRoleByUserId" resultType="java.lang.Long">
+        select role.role_id,role.role_name from tbl_user_group_rel uGroup
+        inner join tbl_group group1 on group1.group_id = uGroup.group_id and
+         group1.use_flag =1 and uGroup.user_id =#{userid} inner join tbl_group_role_rel gRole
+          on group1.group_id = gRole.group_id INNER JOIN tbl_role role on gRole.role_id
+          = role.role_id and role.use_flag = 1
+
+    </select>
+    <select id="selectMenuByRoleId" resultMap="BaseResultMapTo">
+        <foreach collection="roleIds" separator="union" item="item" index="i">
+
+
+            select distinct menu.menu_id,menu.menu_name,menu.menu_url,menu.father_id,menu.is_jump,menu.icon from tbl_role_auth_rel rAuth inner join
+            tbl_auth auth on rAuth.auth_id = auth.auth_id and auth.use_flag = 1
+            and rAuth.role_id = #{item} inner join tbl_auth_menu_rel aMenu
+            on auth.auth_id = aMenu.auth_id inner join tbl_menu menu on aMenu.menu_id = menu.menu_id
+        </foreach>
+--         order by seq DESC
+    </select>
+    <!--    <insert id="insertAuthByRoleId" >-->
+    <!--        insert into tbl_role_auth_rel (role_id,auth_id) values-->
+    <!--        <foreach collection="roleAuthVos" separator="," item="item" index="i">-->
+    <!--            (#{item.roleId},#{item.authId})-->
+    <!--        </foreach>-->
+    <!--    </insert>-->
+
+</mapper>

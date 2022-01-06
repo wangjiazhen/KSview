@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ks.sys.org.mapper.OrgMapper">
+
+    <update id="upFlag" parameterType="org.ks.sys.org.vo.OrgVo">
+
+        update tbl_org
+        set update_acct = #{updateAcct},
+            update_time = #{updateTime}
+        <if test="useFlag == 1" >
+            ,use_flag = 0
+        </if>
+        <if test="useFlag == 0" >
+            ,use_flag = 1
+        </if>
+
+        where org_id = #{orgId}
+
+    </update>
+
+
+    <select id="ckChongFu" resultType="org.ks.sys.po.TblOrg">
+        select org_id as orgId,org_name as orgName from tbl_org
+        where org_name= #{orgName}
+    </select>
+
+
+    <resultMap id="BaseResultMap" type="org.ks.sys.po.TblOrg">
+        <id column="org_id" jdbcType="BIGINT" property="orgId" />
+        <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+        <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
+        <result column="father_id" jdbcType="BIGINT" property="fatherId" />
+        <result column="org_type_code" jdbcType="VARCHAR" property="orgTypeCode" />
+        <result column="use_flag" jdbcType="INTEGER" property="useFlag" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_acct" jdbcType="VARCHAR" property="createAcct" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_acct" jdbcType="VARCHAR" property="updateAcct" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    org_id, org_name, org_code, father_id, org_type_code, use_flag, create_time,
+    create_acct, update_time, update_acct
+  </sql>
+
+    <select id="selectTiaojian"  resultMap="BaseResultMap" parameterType="org.ks.sys.org.vo.OrgDto">
+
+        select
+        <include refid="Base_Column_List" />
+        from tbl_org
+        where 1=1
+        <if test="orgName != null and orgName != ''">
+            and instr(org_name, #{orgName})
+        </if>
+        <if test="orgCode != null and orgCode != ''">
+            and instr(org_code, #{orgCode})
+        </if>
+        <if test="orgTypeName != null and orgTypeName != ''">
+            and instr(org_type_code,#{orgTypeName})
+        </if>
+        order by update_time desc
+    </select>
+
+</mapper>

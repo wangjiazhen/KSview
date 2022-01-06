@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.ks.sys.user.mapper.UserMapper">
+    <resultMap id="userShow" type="org.ks.sys.user.pojo.User">
+        <id column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="acct" jdbcType="VARCHAR" property="acct" />
+        <result column="pwd" jdbcType="VARCHAR" property="pwd" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="use_flag" jdbcType="INTEGER" property="useFlag" />
+        <result column="org_id" jdbcType="BIGINT" property="orgId" />
+        <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
+        <result column="real_name" jdbcType="VARCHAR" property="realName" />
+        <result column="mail_addr" jdbcType="VARCHAR" property="mailAddr" />
+        <result column="create_acct" jdbcType="VARCHAR" property="createAcct" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="update_acct" jdbcType="VARCHAR" property="updateAcct" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <association property="org" javaType="org.ks.sys.org.pojo.Org">
+            <id column="org_id" jdbcType="BIGINT" property="orgId" />
+            <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+            <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
+            <result column="father_id" jdbcType="BIGINT" property="fatherId" />
+            <result column="org_type_code" jdbcType="VARCHAR" property="orgTypeCode" />
+            <result column="org_type_name" jdbcType="VARCHAR" property="orgTypeName" />
+            <result column="use_flag" jdbcType="INTEGER" property="useFlag" />
+            <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+            <result column="create_acct" jdbcType="VARCHAR" property="createAcct" />
+            <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+            <result column="update_acct" jdbcType="VARCHAR" property="updateAcct" />
+        </association>
+
+    </resultMap>
+
+
+    <select id="selectUser" resultMap="userShow" parameterType="org.ks.sys.user.vo.ConditionalQuery">
+
+        select
+        t.user_id,t.acct,t.pwd,t.name,t.use_flag,t.org_id,t.mobile_phone,t.real_name,t.mail_addr,t.create_acct,t.create_time,t.update_acct,t.update_time,
+        o.org_id,o.org_name
+        from tbl_user t
+        left join tbl_org o
+        on t.org_id = o.org_id
+        where 1=1
+        <if test="acct != null and acct != ''">
+            and instr(acct, #{acct})
+        </if>
+        <if test="name != null and name != ''">
+            and instr(name, #{name})
+        </if>
+        <if test="mobilePhone != null and mobilePhone != ''">
+            and mobile_phone =#{mobilePhone}
+        </if>
+        order by t.create_time,t.update_time desc
+
+    </select>
+
+    <!--查询所有数据供user使用-->
+    <select id="selectOrg" resultType="org.ks.sys.po.TblOrg">
+        select org_id as orgId ,org_name as orgName from tbl_org
+    </select>
+    <select id="selectOrgVo" resultType="org.ks.sys.vo.MenuVo">
+
+            select org_id as id ,org_name as label ,father_id as pId from tbl_org
+
+    </select>
+    <select id="selectUserNull" resultType="org.ks.sys.user.pojo.User">
+         select user_id as userId,acct,name,mobile_phone as mobilePhone,real_name as realName from tbl_user
+        where org_id is null
+    </select>
+
+
+    <update id="updataUserOrg" parameterType="java.util.List">
+        UPDATE tbl_user
+        <foreach collection="list" item="param">
+
+        set org_id = #{param.oid}
+        </foreach>
+
+        WHERE user_id in
+
+        <foreach item="item" index="index" collection="list">
+            <foreach item="idItem" index="index" collection="item.uid" open="(" close=")" separator=",">
+                #{idItem}
+            </foreach>
+        </foreach>
+
+    </update>
+
+
+    <select id="ckUser" resultType="org.ks.sys.user.vo.UserVoUser">
+        select user_id as userId,acct from tbl_user
+        where acct= #{acct}
+    </select>
+
+    <update id="upFlag" parameterType="org.ks.sys.user.vo.UserVoFlag">
+        update tbl_user
+
+        set update_acct = #{updateAcct},
+            update_time = #{updateTime}
+        <if test="useFlag == 1" >
+            ,use_flag = 0
+        </if>
+        <if test="useFlag == 0" >
+            ,use_flag = 1
+        </if>
+
+        where user_id = #{userId}
+    </update>
+
+</mapper>
