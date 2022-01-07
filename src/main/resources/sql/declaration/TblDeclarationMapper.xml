@@ -112,6 +112,21 @@
       order by ${orderByClause}
     </if>
   </select>
+
+  <select id="selectByQueryDecl" parameterType="org.ks.sys.declaration.vo.ConditionalQueryDecl" resultMap="BaseResultMap">
+    select
+    decl_id, real_name, mobile_phone, decl_url, create_acct, create_time, update_acct,
+    update_time
+    from tbl_declaration
+    where 1=1
+    <if test="realName != null and realName != ''">
+      and real_name=#{realName}
+    </if>
+    <if test="mobilePhone != null and mobilePhone != ''">
+      and mobile_phone=#{mobilePhone}
+    </if>
+    order by decl_id desc
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
