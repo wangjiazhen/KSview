@@ -136,6 +136,9 @@ public class DeclartionCtrl {
             file.transferTo(dest);
 
             String url= lenovoService.lenvoFileUpload(dest.getPath(),suffixName);
+            if("".equals(url)){
+                re = new ResultInfo(StatusCodeEnum.failure,"上传失败");
+            }
             re.setData(url);
             return re;
         } catch (Exception e) {

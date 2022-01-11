@@ -30,6 +30,12 @@ public class DeclarationServiceImpl implements DeclarationService {
     @Autowired
     private UserService userService;
 
+    /**
+     * 是否重复标记
+     */
+    private static final  String CHONGFU_FLAF="chongfu";
+
+
 
 
     @Override
@@ -105,10 +111,10 @@ public class DeclarationServiceImpl implements DeclarationService {
     @Override
     public ResultInfo insertResult(TblDeclaration record) {
         ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"成功");
-        TblDeclaration tblDeclarations=declarationMapper.selectByQueryDeclphone(record.getMobilePhone());
+        List<TblDeclaration> tblDeclarations=declarationMapper.selectByQueryDeclphone(record.getMobilePhone());
 
-        if(!"".equals(tblDeclarations.getMobilePhone())){
-            re = new ResultInfo(StatusCodeEnum.EXISTS,"成功");
+        if(tblDeclarations.size()>0){
+            re.setData(CHONGFU_FLAF);
             return re;
         }
 

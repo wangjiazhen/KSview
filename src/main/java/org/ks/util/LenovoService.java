@@ -130,7 +130,7 @@ public class LenovoService {
             return previewUrl.getPreviewUrl();
         }catch (Exception e){
             deleteFiles(filePath);
-            return "上传失败";
+            return "";
         }
     }
 

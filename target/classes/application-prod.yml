@@ -40,6 +40,11 @@ spring:
         max-wait: -1ms
         max-idle: 10
         min-idle: 2
+lxy:
+  addr: http://10.20.20.6
+  user: application
+  pwd: qaz123
+  pathType: ent
 
 
 #mybatis:
