@@ -6,28 +6,21 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.ks.enums.StatusCodeEnum;
 import org.ks.sys.declaration.bean.TblDeclaration;
-import org.ks.sys.declaration.bean.TblDeclarationExample;
 import org.ks.sys.declaration.service.DeclarationService;
 import org.ks.sys.declaration.service.impl.DeclarationServiceImpl;
 import org.ks.sys.declaration.vo.ConditionalQueryDecl;
 import org.ks.sys.declaration.vo.ConditionalupdateDecl;
-import org.ks.sys.po.TblUser;
-import org.ks.sys.user.vo.ConditionalQuery;
-import org.ks.sys.user.vo.UserVoUser;
 import org.ks.util.LenovoService;
-import org.ks.util.LocalDateTimeUtil;
 import org.ks.util.ResultInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -101,7 +94,7 @@ public class DeclartionCtrl {
     @ApiOperation("上传文件")
     @PostMapping(value = "/uploading")
     public @ResponseBody
-    ResultInfo uploadFile(@RequestParam("filename") MultipartFile file) throws FileNotFoundException, BoxException {
+    ResultInfo uploadFile(@RequestParam("filename") MultipartFile file) {
         ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"成功");
         log.info("接收到的文件数据为：" + file);
 
