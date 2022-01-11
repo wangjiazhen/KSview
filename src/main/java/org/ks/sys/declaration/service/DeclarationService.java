@@ -109,4 +109,9 @@ public interface DeclarationService {
      * @mbg.generated Thu Jan 06 17:25:37 CST 2022
      */
     int updateByPrimaryKey(TblDeclaration record);
+
+    void insertTblDeclarationInfo(String realName, String mobilePhone, String verifyCode) ;
+
+    String policyQuery(String realName, String mobilePhone) ;
+
 }

@@ -1,9 +1,8 @@
 package org.ks.sys.declaration.ctrl;
 
-import com.lenovo.css.boxsdk.exception.BoxException;
-import com.lenovo.css.boxsdk.file.model.FileModel;
-import com.lenovo.css.boxsdk.file.model.PreviewModel;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.ks.enums.StatusCodeEnum;
 import org.ks.sys.declaration.bean.TblDeclaration;
@@ -22,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -149,7 +149,53 @@ public class DeclartionCtrl {
 
     }
 
+    /**
+     * 保存登录信息
+     * @param
+     * @return
+     */
+    @PostMapping("/saveTblDeclarationInfo")
+    @ApiOperation(value = "登录接口",httpMethod = "POST",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "姓名",name = "realName",required = true,dataType = "String"),
+            @ApiImplicitParam(value = "手机号码",name = "mobilePhone",required = true,dataType = "String"),
+            @ApiImplicitParam(value = "验证码",name = "verifiedCode",required = true,dataType = "String")
+    })
+    public ResultInfo saveTblDeclarationInfo(String realName, String mobilePhone, String verifiedCode){
+        log.info("======登录手机号:"+mobilePhone+"登录姓名:"+realName+"验证码:"+verifiedCode);
+        ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"成功");
+        try {
+            declarationService.insertTblDeclarationInfo(realName, mobilePhone, verifiedCode);
+        } catch (Exception ex){
+            re = new ResultInfo(StatusCodeEnum.PROCESSING_EXCEPTION,"请求发生异常");
+            log.info(ex.getMessage(), ex);
+        }
+        return re;
+    }
 
+    /**
+     * 保单查询
+     * @param
+     * @return
+     */
+    @PostMapping("/policyQuery")
+    @ApiOperation(value = "保单查询接口",httpMethod = "POST",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "姓名",name = "realName",required = true,dataType = "String"),
+            @ApiImplicitParam(value = "手机号码",name = "mobilePhone",required = true,dataType = "String")
+    })
+    public ResultInfo policyQuery(String realName, String mobilePhone, String verifiedCode){
+        log.info("======保单查询手机号:"+mobilePhone+"保单查询姓名:"+realName);
+        ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"成功");
+        try {
+            String policyUrl = declarationService.policyQuery(realName, mobilePhone);
+            re.setData(policyUrl);
+        } catch (Exception ex){
+            re = new ResultInfo(StatusCodeEnum.PROCESSING_EXCEPTION,"请求发生异常");
+            log.info(ex.getMessage(), ex);
+        }
+        return re;
+    }
 
 }
 
