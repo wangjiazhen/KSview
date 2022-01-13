@@ -1,6 +1,7 @@
 package org.ks.sys.cache.service;
 
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,14 @@ import java.util.concurrent.TimeUnit;
 public class RedisService {
     @Resource(name = "redisTemplate")
     private RedisTemplate redisTemplate;
+    @Resource(name="redisTemplate")
+    ValueOperations<Object, Object> valOps;
+
+    //根据时间进行存储
+    public void save(Object key, Object value, int time){
+        valOps.set(key, value, time, TimeUnit.SECONDS);
+    }
+
 
     /**
      * 设置 String 类型 key-value
