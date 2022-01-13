@@ -11,6 +11,7 @@ import org.ks.sys.declaration.service.impl.DeclarationServiceImpl;
 import org.ks.sys.declaration.vo.ConditionalQueryDecl;
 import org.ks.sys.declaration.vo.ConditionalupdateDecl;
 import org.ks.util.LenovoService;
+import org.ks.util.RestHttpClientTest;
 import org.ks.util.ResultInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,8 @@ public class DeclartionCtrl {
     private DeclarationService declarationService;
     @Autowired
     private LenovoService lenovoService;
+    @Autowired
+    private RestHttpClientTest restHttpClientTest;
 
     /**
      * 查询报单数据
@@ -155,10 +158,17 @@ public class DeclartionCtrl {
             @ApiImplicitParam(value = "验证码",name = "verifiedCode",required = true,dataType = "String")
     })
     public ResultInfo saveTblDeclarationInfo(String realName, String mobilePhone, String verifiedCode){
-        log.info("======登录手机号:"+mobilePhone+"登录姓名:"+realName+"验证码:"+verifiedCode);
+        log.info("======登录手机号:"+mobilePhone+"登录姓名:"+realName+"客户输入的验证码:"+verifiedCode);
         ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"成功");
         try {
-            declarationService.insertTblDeclarationInfo(realName, mobilePhone, verifiedCode);
+            String phonecode=restHttpClientTest.getPhoneKey(mobilePhone,verifiedCode);
+            if(phonecode==null){
+                re.setMessage("您还没有获取验证码");
+            }else if(!verifiedCode.equals(phonecode)){
+                re.setMessage("验证码错误");
+            }else{
+                declarationService.insertTblDeclarationInfo(realName, mobilePhone, verifiedCode);
+            }
         } catch (Exception ex){
             re = new ResultInfo(StatusCodeEnum.PROCESSING_EXCEPTION,"请求发生异常");
             log.info(ex.getMessage(), ex);
@@ -190,5 +200,19 @@ public class DeclartionCtrl {
         return re;
     }
 
+    /**
+     * 发送验证码
+     * @param
+     * @return
+     */
+    @PostMapping("/sendMessageCode")
+    @ApiOperation(value = "发送验证码接口",httpMethod = "POST",produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "手机号码",name = "mobilePhone",required = true,dataType = "String"),
+    })
+    public ResultInfo sendMessageCode( String mobilePhone){
+        log.info("======发送验证码手机号:"+mobilePhone);
+        return restHttpClientTest.sendMsgVerification(mobilePhone);
+    }
 }
 
