@@ -168,29 +168,30 @@ public class DeclarationServiceImpl implements DeclarationService {
         TblDeclarationUserExample tblDeclarationUserExample = new TblDeclarationUserExample();
         tblDeclarationUserExample.createCriteria().andMobilePhoneEqualTo(mobilePhone);
         List<TblDeclarationUser> tblDeclarationUserList = tblDeclarationUserMapper.selectByExample(tblDeclarationUserExample);
-        TblDeclarationExample tblDeclarationExample = new TblDeclarationExample();
-        tblDeclarationExample.createCriteria().andMobilePhoneEqualTo(mobilePhone);
-        List<TblDeclaration> tblDeclarationList = declarationMapper.selectByExample(tblDeclarationExample);
+
+//        TblDeclarationExample tblDeclarationExample = new TblDeclarationExample();
+//        tblDeclarationExample.createCriteria().andMobilePhoneEqualTo(mobilePhone);
+//        List<TblDeclaration> tblDeclarationList = declarationMapper.selectByExample(tblDeclarationExample);
         if(CollectionUtils.isEmpty(tblDeclarationUserList)){
             TblDeclarationUser tblDeclarationUser = new TblDeclarationUser();
-            tblDeclarationUser.setUserId(Long.parseLong(mobilePhone+ LocalDateTimeUtil.getCurrentDateTimeStr()));
+//            tblDeclarationUser.setUserId(Long.parseLong(mobilePhone+ LocalDateTimeUtil.getCurrentDateTimeStr()));
             tblDeclarationUser.setName(realName);
             tblDeclarationUser.setMobilePhone(mobilePhone);
             tblDeclarationUser.setCreateTime(new Date());
             tblDeclarationUserMapper.insert(tblDeclarationUser);
         }
-        if(CollectionUtils.isEmpty(tblDeclarationList)){
-            TblDeclaration tblDeclaration = new TblDeclaration();
-            tblDeclaration.setDeclId(Long.parseLong(mobilePhone+ LocalDateTimeUtil.getCurrentDateTimeStr()));
-            tblDeclaration.setRealName(realName);
-            tblDeclaration.setMobilePhone(mobilePhone);
-            tblDeclaration.setDeclUrl("");
-            tblDeclaration.setCreateAcct("admin");
-            tblDeclaration.setCreateTime(new Date());
-            tblDeclaration.setUpdateAcct("admin");
-            tblDeclaration.setUpdateTime(new Date());
-            declarationMapper.insert(tblDeclaration);
-        }
+//        if(CollectionUtils.isEmpty(tblDeclarationList)){
+//            TblDeclaration tblDeclaration = new TblDeclaration();
+//            tblDeclaration.setDeclId(Long.parseLong(mobilePhone+ LocalDateTimeUtil.getCurrentDateTimeStr()));
+//            tblDeclaration.setRealName(realName);
+//            tblDeclaration.setMobilePhone(mobilePhone);
+//            tblDeclaration.setDeclUrl("");
+//            tblDeclaration.setCreateAcct("admin");
+//            tblDeclaration.setCreateTime(new Date());
+//            tblDeclaration.setUpdateAcct("admin");
+//            tblDeclaration.setUpdateTime(new Date());
+//            declarationMapper.insert(tblDeclaration);
+//        }
     }
 
     @Override
