@@ -184,14 +184,13 @@ public class DeclartionCtrl {
     @PostMapping("/policyQuery")
     @ApiOperation(value = "保单查询接口",httpMethod = "POST",produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiImplicitParams({
-            @ApiImplicitParam(value = "姓名",name = "realName",required = true,dataType = "String"),
             @ApiImplicitParam(value = "手机号码",name = "mobilePhone",required = true,dataType = "String")
     })
-    public ResultInfo policyQuery(String realName, String mobilePhone, String verifiedCode){
-        log.info("======保单查询手机号:"+mobilePhone+"保单查询姓名:"+realName);
+    public ResultInfo policyQuery(String mobilePhone){
+        log.info("======保单查询手机号:"+mobilePhone);
         ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"成功");
         try {
-            String policyUrl = declarationService.policyQuery(realName, mobilePhone);
+            String policyUrl = declarationService.policyQuery(mobilePhone);
             re.setData(policyUrl);
         } catch (Exception ex){
             re = new ResultInfo(StatusCodeEnum.PROCESSING_EXCEPTION,"请求发生异常");

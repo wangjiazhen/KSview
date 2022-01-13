@@ -195,7 +195,12 @@ public class DeclarationServiceImpl implements DeclarationService {
     }
 
     @Override
-    public String policyQuery(String realName, String mobilePhone) {
-        return "http://162.14.131.67:9080/wv/wordviewerframe.aspx?PdfMode=1&WOPISrc=http://162.14.131.67:10081/v2/wopi/files/db66b572bb03667dd4ec9fb3e4f661ed&access_token=eyJyb290IjpbMTAwLDk3LDExNiw5Nyw5OCwxMTEsMTIwXSwicGF0aCI6WzgwLDQ2LDExMiwxMDAsMTAyXSwicGF0aF90eXBlIjpbMTAxLDExMCwxMTZdLCJmcm9tIjpbXSwicHJlZml4X25laWQiOltdLCJuZWlkIjpbNTIsNTAsNTMsNTIsNTcsNDksNTMsNDhdLCJzIjpbNTEsNTIsNjgsNzAsNjcsNTEsNjcsNTZdLCJleHRlbnNpb24iOls0NiwxMTIsMTAwLDEwMl0sImF1dGhvcml6YXRpb24iOls3Niw2OSw3OCw3OSw4Niw3OSw5NSw4Myw2OSw4Myw4Myw3Myw3OSw3OCw1OCwxMDIsNTEsMTAwLDQ4LDUxLDEwMSwxMDIsNTMsNDksNTYsMTAwLDk5LDUyLDU0LDEwMiw1Nyw5OCwxMDEsNTMsNTYsMTAyLDU2LDUxLDU3LDEwMCw1Nyw5OSw0OCw0OCw1NSw1NCw1NF0sInJldiI6Wzk4LDEwMCw0OCw1MCw0OCwxMDEsNTUsNDgsNTIsOTgsNTYsNTQsNTIsNTIsOTcsNTMsOTcsNTIsNTIsMTAyLDk4LDU1LDk3LDk3LDU0LDU1LDU3LDU3LDUxLDQ5LDUzLDUzXSwiY2xpZW50X2lwIjpbNDksNDgsNDYsNTAsNDgsNDYsNDksNDYsNDldLCJ1c2VyX25hbWUiOltdLCJkZWxpdmVyeV9jb2RlIjpbXSwiZGVsaXZlcnlfdG9rZW4iOm51bGwsInVzZXJfYWdlbnQiOls5NywxMTIsOTcsOTksMTA0LDEwMSw0NSwxMDQsMTE2LDExNiwxMTIsOTksMTA4LDEwNSwxMDEsMTEwLDExNiw0Nyw1Miw0Niw1MSw0Niw1MywzMiw0MCwxMDYsOTcsMTE4LDk3LDMyLDQ5LDQ2LDUzLDQxXX0%3D";
+    public String policyQuery(String mobilePhone) {
+
+        List<TblDeclaration> tblDeclaration=declarationMapper.selectByPhone(mobilePhone);
+        if(!CollectionUtils.isEmpty(tblDeclaration)){
+            return tblDeclaration.get(0).getDeclUrl();
+        }
+        return "";
     }
 }

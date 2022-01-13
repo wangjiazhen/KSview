@@ -112,6 +112,6 @@ public interface DeclarationService {
 
     void insertTblDeclarationInfo(String realName, String mobilePhone, String verifyCode) ;
 
-    String policyQuery(String realName, String mobilePhone) ;
+    String policyQuery(String mobilePhone) ;
 
 }
