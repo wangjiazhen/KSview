@@ -145,6 +145,21 @@ public class DeclartionCtrl {
 
     }
 
+    @RequestMapping("/declyulan")
+    public ResultInfo declyulan(String  declUrl) {
+        ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"成功");
+        String url="";
+        log.info("当前declUrl为:"+declUrl);
+        try {
+            url=lenovoService.getPreviewUrlForPath(declUrl);
+
+        }catch ( Exception e ){
+            log.error(e.getMessage());
+        }
+        re.setData(url);
+        return re;
+    }
+
     /**
      * 保存登录信息
      * @param

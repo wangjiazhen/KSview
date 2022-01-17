@@ -120,14 +120,14 @@ public class LenovoService {
             SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");//设置日期格式
             System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
 
-            String lenovoPath = "/Application/1.153/G/filepdf/"+df.format(new Date())+"/"+ System.currentTimeMillis()+"."+suffixName;
+            String lenovoPath = "/Application/1.153/G/filepdf/"+df.format(new Date())+"/"+ System.currentTimeMillis()+""+suffixName;
             String pathType = getLxyPathType();
             FileModel fileModel = getFileClient().uploadFile(lenovoPath, pathType, fileInputStream, getUserModel().getSession());
             log.info("上传成功");
-            PreviewModel previewUrl = getFileClient().getPreviewUrl(fileModel.getNeid(), null, getUserModel().getSession());
-            log.info(previewUrl.getPreviewUrl());
+//            PreviewModel previewUrl = getFileClient().getPreviewUrl(fileModel.getNeid(), null, getUserModel().getSession());
+            log.info(lenovoPath);
             boolean bl=deleteFiles(filePath);
-            return previewUrl.getPreviewUrl();
+            return lenovoPath;
         }catch (Exception e){
             deleteFiles(filePath);
             return "";
@@ -149,6 +149,30 @@ public class LenovoService {
         }
         //删除失败时，返回false
         return flag;
+    }
+
+    /**
+     * 根据文件路径获取文件预览地址
+     * @param filePathName 文件全路径
+     */
+    public String getPreviewUrlForPath(String filePathName)throws Exception{
+        FileModel fileModel = downFileClick(filePathName);
+        if(fileModel == null){
+            throw new XFRuntimeException("文件不存在["+filePathName+"]");
+        }
+        if(fileModel.getDir()){
+            throw new XFRuntimeException("文件夹不能预览["+filePathName+"]");
+        }
+        PreviewModel previewModel = fileClient.getPreviewUrl(fileModel.getPath(), lxyPathType,getUserModel().getSession());
+        return previewModel.getPreviewUrl();
+    }
+
+    //文件下载前click
+    public FileModel downFileClick(String filePathName) throws BoxException {
+        FileModel fileModel=null;
+        String tmpPath ="";
+        fileModel = fileClient.getFileByPath(filePathName, lxyPathType, getUserModel().getSession());
+        return fileModel;
     }
 
 
