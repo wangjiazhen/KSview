@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService{
         ResultInfo resultInfo = new ResultInfo(StatusCodeEnum.OK,"成功");
         if(userVoUser.size() == 0 ){
 
-            record.setUserId(SeqUtil.getNextId());
+//            record.setUserId(SeqUtil.getNextId());
 
             String acct = record.getAcct();
             String pwd = record.getPwd();

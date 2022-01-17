@@ -82,7 +82,7 @@ public class GroupServiceImpl implements GroupService {
             group.setCreateTime(new Date());
             group.setUpdateTime(new Date());
             group.setUseFlag(0);
-            group.setGroupId(SeqUtil.getNextId());
+//            group.setGroupId(SeqUtil.getNextId());
             int insert = tblGroupMapper.insert(group);
             if (insert == 0) {
                 log.info("插入用户组失败");

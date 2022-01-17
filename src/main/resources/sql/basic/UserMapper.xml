@@ -21,7 +21,7 @@
             <result column="org_code" jdbcType="VARCHAR" property="orgCode" />
             <result column="father_id" jdbcType="BIGINT" property="fatherId" />
             <result column="org_type_code" jdbcType="VARCHAR" property="orgTypeCode" />
-            <result column="org_type_name" jdbcType="VARCHAR" property="orgTypeName" />
+<!--            <result column="org_type_name" jdbcType="VARCHAR" property="orgTypeName" />-->
             <result column="use_flag" jdbcType="INTEGER" property="useFlag" />
             <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
             <result column="create_acct" jdbcType="VARCHAR" property="createAcct" />
@@ -60,7 +60,7 @@
     </select>
     <select id="selectOrgVo" resultType="org.ks.sys.vo.MenuVo">
 
-            select org_id as id ,org_name as label ,father_id as pId from tbl_org
+            select org_id as id ,org_name as label ,father_id as pId from tbl_org where use_flag = 1
 
     </select>
     <select id="selectUserNull" resultType="org.ks.sys.user.pojo.User">

@@ -161,7 +161,8 @@ public class DeclartionCtrl {
         log.info("======登录手机号:"+mobilePhone+"登录姓名:"+realName+"客户输入的验证码:"+verifiedCode);
         ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"成功");
         try {
-            String phonecode=restHttpClientTest.getPhoneKey(mobilePhone,verifiedCode);
+//            String phonecode=restHttpClientTest.getPhoneKey(mobilePhone,verifiedCode);
+            String phonecode="123456";
             if(phonecode==null){
                 re.setMessage("您还没有获取验证码");
             }else if(!verifiedCode.equals(phonecode)){

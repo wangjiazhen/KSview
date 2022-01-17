@@ -95,7 +95,7 @@ public class MenuServiceImpl implements MenuService {
             tblMenu.setCreateTime(new Date());
             tblMenu.setUpdateTime(new Date());
             tblMenu.setUseFlag(1);
-            tblMenu.setMenuId(SeqUtil.getNextId());
+//            tblMenu.setMenuId(SeqUtil.getNextId());
             int insert = tblMenuMapper.insert(tblMenu);
             if (insert == 0){
                 log.info("插入菜单失败");

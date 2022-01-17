@@ -86,17 +86,19 @@ public class OrgServiceImpl implements OrgService {
     @Override
     public ResultInfo insertSelective(TblOrg record) {
 
+        /**
+         * 判断是否存在
+         */
         TblOrg tblOrg = new TblOrg();
         tblOrg.setOrgName(record.getOrgName());
-        tblOrg.setCreateAcct(userInfo.getUserId());
-        LocalDateTime now = LocalDateTime.now();
-        tblOrg.setUpdateTime(LocalDateTimeUtil.getDate(now));
         List<TblOrg> tblOrgs = orgMapper.ckChongFu(tblOrg);
+
         ResultInfo  re = new ResultInfo(StatusCodeEnum.OK,"成功");
         if (tblOrgs.size() == 0){
+            LocalDateTime now = LocalDateTime.now();
+            record.setCreateAcct(userInfo.getUserId());
             record.setCreateTime(LocalDateTimeUtil.getDate(now));
             record.setUpdateTime(LocalDateTimeUtil.getDate(now));
-            record.setOrgId(SeqUtil.getNextId());
             record.setUseFlag(1);
 
             re.setData(tblOrgMapper.insertSelective(record));

@@ -106,7 +106,7 @@ public class AuthServiceImpl implements AuthService {
             TblAuth auth = new TblAuth();
             BeanUtils.copyProperties(authAddAndUpdateDto, auth);
             try {
-                auth.setAuthId(SeqUtil.getNextId());
+//                auth.setAuthId(SeqUtil.getNextId());
             } catch (Exception e) {
                 e.printStackTrace();
             }
