@@ -407,7 +407,7 @@
   <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     decl_id, real_name, mobile_phone, decl_url, create_acct, create_time, update_acct,
-    update_time,decl_url_acct,flag
+    update_time,decl_url_acct,flag,decl_url_image
     from tbl_declaration
     where mobile_phone=#{mobilePhone} and flag=1
 
