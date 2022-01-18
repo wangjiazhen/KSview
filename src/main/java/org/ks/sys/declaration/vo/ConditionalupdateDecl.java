@@ -4,6 +4,16 @@ public class ConditionalupdateDecl {
     private Long declId;
     private String declUrl;
     private String declUrlAcct;
+    private String declUrlImage;
+
+
+    public String getDeclUrlImage() {
+        return declUrlImage;
+    }
+
+    public void setDeclUrlImage(String declUrlImage) {
+        this.declUrlImage = declUrlImage;
+    }
 
     public Long getDeclId() {
         return declId;

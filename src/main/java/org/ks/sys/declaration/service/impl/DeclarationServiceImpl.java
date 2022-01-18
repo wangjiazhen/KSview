@@ -110,6 +110,7 @@ public class DeclarationServiceImpl implements DeclarationService {
         tblDecladd.setRealName(tblDeclarations.getRealName());
         tblDecladd.setMobilePhone(tblDeclarations.getMobilePhone());
         tblDecladd.setCreateAcct(tblDeclarations.getCreateAcct());
+        tblDecladd.setDeclUrlImage(conditionalupdateDecl.getDeclUrlImage());
 
         declarationMapper.insert(tblDecladd);
         re.setData(tblDeclarations);
