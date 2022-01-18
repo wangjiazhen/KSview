@@ -10,6 +10,7 @@ import org.ks.sys.declaration.service.DeclarationService;
 import org.ks.sys.declaration.service.impl.DeclarationServiceImpl;
 import org.ks.sys.declaration.vo.ConditionalQueryDecl;
 import org.ks.sys.declaration.vo.ConditionalupdateDecl;
+import org.ks.util.CommonUtil;
 import org.ks.util.LenovoService;
 import org.ks.util.RestHttpClientTest;
 import org.ks.util.ResultInfo;
@@ -23,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @CrossOrigin
@@ -118,7 +120,7 @@ public class DeclartionCtrl {
         // 解决中文问题,liunx 下中文路径,图片显示问题
         fileName = UUID.randomUUID() + suffixName;
         File dest0 = new File(templatePath);
-        File dest = new File(dest0, prefixName + File.separator + fileName);
+        File dest = new File(dest0,   File.separator + fileName);
         //文件上传-覆盖
         try {
             // 检测是否存在目录
@@ -130,7 +132,7 @@ public class DeclartionCtrl {
                 dest.mkdirs();
             }
             file.transferTo(dest);
-
+            //上传pdf
             String url= lenovoService.lenvoFileUpload(dest.getPath(),suffixName);
             if("".equals(url)){
                 re = new ResultInfo(StatusCodeEnum.failure,"上传失败");

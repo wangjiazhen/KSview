@@ -10,18 +10,21 @@ import com.lenovo.css.boxsdk.file.model.FileModel;
 import com.lenovo.css.boxsdk.file.model.PreviewModel;
 import com.lenovo.css.boxsdk.user.UserClient;
 import com.lenovo.css.boxsdk.user.model.UserModel;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPageTree;
+import org.apache.pdfbox.rendering.ImageType;
+import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class LenovoService {
@@ -120,14 +123,17 @@ public class LenovoService {
             SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");//设置日期格式
             System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
 
-            String lenovoPath = "/Application/1.153/G/filepdf/"+df.format(new Date())+"/"+ System.currentTimeMillis()+""+suffixName;
+            String lenovoname = "/Application/1.153/G/filepdf/"+df.format(new Date())+"/"+ System.currentTimeMillis()+"";
+            String lenovoPath=lenovoname+suffixName;
             String pathType = getLxyPathType();
             FileModel fileModel = getFileClient().uploadFile(lenovoPath, pathType, fileInputStream, getUserModel().getSession());
             log.info("上传成功");
 //            PreviewModel previewUrl = getFileClient().getPreviewUrl(fileModel.getNeid(), null, getUserModel().getSession());
             log.info(lenovoPath);
-            boolean bl=deleteFiles(filePath);
-            return lenovoPath;
+            //pdf转成图片
+            String images=pdfToPng(lenovoname,filePath);
+//            boolean bl=deleteFiles(filePath);
+            return lenovoPath+"&"+images;
         }catch (Exception e){
             deleteFiles(filePath);
             return "";
@@ -175,6 +181,98 @@ public class LenovoService {
         return fileModel;
     }
 
+    /**
+     * pdf转png图片
+     * @param sourceFilePath 源文件路径
+     * @param targetFilePath 目标文件路径
+     * @return
+     */
+    public static final String IMAGE_PNG = "png";
+    public  String  pdfToPng(String sourceFilePath,String targetFilePath) {
+        String prefixName = targetFilePath.substring(0, targetFilePath.lastIndexOf("."))+"."+IMAGE_PNG;
+        String flag = "";
+        PDDocument doc = null;
+        try {
+            String dir = targetFilePath.substring(0, targetFilePath.lastIndexOf("\\"));
+            File dirfile = new File(dir);
+            if(!dirfile.exists()){
+                dirfile.mkdirs();
+            }
+//            dir+filename+"."+IMAGE_PNG
+            FileInputStream fis = new FileInputStream(new File(targetFilePath));
+            doc = PDDocument.load(fis);
+            PDFRenderer renderer = new PDFRenderer(doc);
+            int pages = doc.getNumberOfPages();
+            //设置最大宽度和总长度
+            int maxWidth = 0;
+            int sumHeight = 0;
+            List<BufferedImage> listbi = new ArrayList<BufferedImage>();
+            // 获取pdf文件流
+            for(int i = 0 ; i < pages; i++){
+                BufferedImage imageBuffer = renderer.renderImageWithDPI(i, 150, ImageType.RGB);
+                int width = imageBuffer.getWidth();
+                int height = imageBuffer.getHeight();
+                if (width > maxWidth){
+                    maxWidth = width;
+                }
+                sumHeight += height;
+                listbi.add(imageBuffer);
+            }
+            //pdf分别转图片后合并
+            BufferedImage imageNew = new BufferedImage(maxWidth,sumHeight,BufferedImage.TYPE_INT_RGB);
+            int nowHeight = 0;
+            for (BufferedImage bi : listbi) {
+                int width = bi.getWidth();
+                int height = bi.getHeight();
+                int[] imageRgbArray = new int[width *  height];
+                imageRgbArray = bi.getRGB(0, 0, width, height, imageRgbArray, 0, width);
+                imageNew.setRGB(0, nowHeight, width, height, imageRgbArray, 0, width);
+                nowHeight += height;
+            }
+            ImageIO.write(imageNew, IMAGE_PNG, new File(prefixName));
+            String imagesurl=lenvoFileUploadimages(prefixName,"."+IMAGE_PNG);
+            flag = imagesurl;
+        } catch (IOException e) {
+            System.out.println("CommonUtils.pdfToPng error");
+            e.printStackTrace();
+        }finally{
+            if(doc != null){
+                try {
+                    doc.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return flag;
+
+    }
+
+
+
+    public String lenvoFileUploadimages(String  filePath, String suffixName) {
+        try{
+            InputStream fileInputStream = new FileInputStream(filePath);
+            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");//设置日期格式
+            System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
+
+            String lenovoname = "/Application/1.153/G/filepdf/"+df.format(new Date())+"/"+ System.currentTimeMillis()+"";
+            String lenovoPath=lenovoname+suffixName;
+            String pathType = getLxyPathType();
+            FileModel fileModel = getFileClient().uploadFile(lenovoPath, pathType, fileInputStream, getUserModel().getSession());
+            log.info("上传成功");
+//            PreviewModel previewUrl = getFileClient().getPreviewUrl(fileModel.getNeid(), null, getUserModel().getSession());
+            log.info(lenovoPath);
+//            //pdf转成图片
+//            pdfToPng(lenovoname,filePath);
+//            boolean bl=deleteFiles(filePath);
+            return lenovoPath;
+        }catch (Exception e){
+            deleteFiles(filePath);
+            return "";
+        }
+    }
 
 
 }
