@@ -10,7 +10,6 @@ import org.ks.sys.declaration.service.DeclarationService;
 import org.ks.sys.declaration.service.impl.DeclarationServiceImpl;
 import org.ks.sys.declaration.vo.ConditionalQueryDecl;
 import org.ks.sys.declaration.vo.ConditionalupdateDecl;
-import org.ks.util.CommonUtil;
 import org.ks.util.LenovoService;
 import org.ks.util.RestHttpClientTest;
 import org.ks.util.ResultInfo;
