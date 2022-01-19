@@ -10,19 +10,27 @@ import com.lenovo.css.boxsdk.file.model.FileModel;
 import com.lenovo.css.boxsdk.file.model.PreviewModel;
 import com.lenovo.css.boxsdk.user.UserClient;
 import com.lenovo.css.boxsdk.user.model.UserModel;
+import com.yz.ZA.util.WebLogs;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.FileNameMap;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -116,7 +124,7 @@ public class LenovoService {
                 + s.substring(24);
     }
 
-
+    //用户上传pdf文件 在通过pdf文件 转成图片上传到联想云
     public String lenvoFileUpload(String  filePath, String suffixName) {
         try{
             InputStream fileInputStream = new FileInputStream(filePath);
@@ -173,11 +181,22 @@ public class LenovoService {
         return previewModel.getPreviewUrl();
     }
 
+    //根目录盘符
+    private static final String[] rootDrives = {"/E","/D","/F","/G"};
     //文件下载前click
     public FileModel downFileClick(String filePathName) throws BoxException {
         FileModel fileModel=null;
-        String tmpPath ="";
-        fileModel = fileClient.getFileByPath(filePathName, lxyPathType, getUserModel().getSession());
+        for (int i = 0; i < rootDrives.length; i++) {
+            try{
+//                G/filepdf/2022/01/18/1642503359538.png
+                fileModel = fileClient.getFileByPath(filePathName, lxyPathType, getUserModel().getSession());
+                if(fileModel != null){
+                    break;
+                }
+            }catch (Exception e) {
+                WebLogs.getLogger().error(e.getMessage());
+            }
+        }
         return fileModel;
     }
 
@@ -250,7 +269,7 @@ public class LenovoService {
     }
 
 
-
+//pdf转成的图片上传到联想云
     public String lenvoFileUploadimages(String  filePath, String suffixName) {
         try{
             InputStream fileInputStream = new FileInputStream(filePath);
@@ -264,8 +283,6 @@ public class LenovoService {
             log.info("上传成功");
 //            PreviewModel previewUrl = getFileClient().getPreviewUrl(fileModel.getNeid(), null, getUserModel().getSession());
             log.info(lenovoPath);
-//            //pdf转成图片
-//            pdfToPng(lenovoname,filePath);
 //            boolean bl=deleteFiles(filePath);
             return lenovoPath;
         }catch (Exception e){
@@ -273,6 +290,75 @@ public class LenovoService {
             return "";
         }
     }
+
+    //pdf文件下载
+    /**
+     * 页面单个文件下载文件（流式）
+     * @param filePathName 文件全路径
+     */
+    public void downFileForInputStream(String filePathName, HttpServletRequest request, HttpServletResponse response)throws Exception{
+        //获取文件信息(判断文件是否存在 不存在抛出异常)
+        FileModel fileModel = downFileClick(filePathName);
+        if(fileModel == null){
+            throw new XFRuntimeException("文件不存在["+filePathName+"]");
+        }
+        if(fileModel.getDir()){
+            //不能下载文件目录
+            //throw new XFRuntimeException("不能下载文件目录["+filePathName+"]");
+            return;
+        }
+        InputStream ins = fileClient.downloadFile(fileModel.getPath(), lxyPathType, null, null, getUserModel().getSession());
+        writeToLocal(ins,response);
+    }
+
+    /**
+     * 将InputStream写入本地文件
+//     * @param destination 写入本地目录
+     * @param input 输入流
+     * @throws IOException IOException
+     */
+    public void writeToLocal(InputStream input, HttpServletResponse response)
+            throws IOException {
+//        //destination路径不存在则新建
+//        File fPath = new File(destination);
+//        File f = new File(fPath.getParent());
+//        if(!f.exists()){
+//            f.mkdirs();
+//        }
+        ServletOutputStream out = response.getOutputStream();
+        try{
+            int index;
+            byte[] bytes = new byte[input.available()];
+//            FileOutputStream downloadFile = new FileOutputStream("");
+//            while ((index = input.read(bytes)) != -1) {
+//                out.write(bytes, 0, index);
+//            }
+            out.write(input.read(bytes));
+//            export(out,"baodan.pdf");
+        } catch (IOException ex){
+            ex.printStackTrace();
+        } finally {
+            if(input != null){
+                input.close();
+            }
+            if(out != null){
+                out.close();
+            }
+        }
+    }
+
+    private ResponseEntity<OutputStream> export(OutputStream os, String fileName) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Content-Disposition", "attachment; filename=" + System.currentTimeMillis() + fileName);
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        return ResponseEntity.ok().headers(headers).contentType(MediaType.parseMediaType("application/octet-stream"))
+                .body(os);
+    }
+
+
+
 
 
 }

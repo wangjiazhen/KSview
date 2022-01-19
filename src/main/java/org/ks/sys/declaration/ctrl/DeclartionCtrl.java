@@ -20,6 +20,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 import java.util.List;
@@ -147,12 +149,12 @@ public class DeclartionCtrl {
     }
 
     @RequestMapping("/declyulan")
-    public ResultInfo declyulan(String  declUrl) {
+    public ResultInfo declyulan(String  declUrlImage) {
         ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"成功");
         String url="";
-        log.info("当前declUrl为:"+declUrl);
+        log.info("当前declUrl为:"+declUrlImage);
         try {
-            url=lenovoService.getPreviewUrlForPath(declUrl);
+            url=lenovoService.getPreviewUrlForPath(declUrlImage);
 
         }catch ( Exception e ){
             log.error(e.getMessage());
@@ -229,6 +231,19 @@ public class DeclartionCtrl {
     public ResultInfo sendMessageCode( String mobilePhone){
         log.info("======发送验证码手机号:"+mobilePhone);
         return restHttpClientTest.sendMsgVerification(mobilePhone);
+    }
+
+
+
+    @RequestMapping("/downdeclUrlImage")
+    public void filedownbydeclUrlImage(String  declUrl, HttpServletRequest request, HttpServletResponse response) {
+        ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"接口成功");
+        try {
+            lenovoService.downFileForInputStream(declUrl, request, response);
+        }catch ( Exception e ){
+            log.error(e.getMessage());
+        }
+
     }
 }
 
