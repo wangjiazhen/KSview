@@ -308,7 +308,7 @@ public class LenovoService {
             return;
         }
         InputStream ins = fileClient.downloadFile(fileModel.getPath(), lxyPathType, null, null, getUserModel().getSession());
-        writeToLocal(ins,response);
+        writeToLocal(ins, request, response);
     }
 
     /**
@@ -317,7 +317,7 @@ public class LenovoService {
      * @param input 输入流
      * @throws IOException IOException
      */
-    public void writeToLocal(InputStream input, HttpServletResponse response)
+    public void writeToLocal(InputStream input, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 //        //destination路径不存在则新建
 //        File fPath = new File(destination);
@@ -325,25 +325,24 @@ public class LenovoService {
 //        if(!f.exists()){
 //            f.mkdirs();
 //        }
-        ServletOutputStream out = response.getOutputStream();
+        response.setContentType("multipart/form-data");
         try{
-            int index;
-            byte[] bytes = new byte[input.available()];
-//            FileOutputStream downloadFile = new FileOutputStream("");
-//            while ((index = input.read(bytes)) != -1) {
-//                out.write(bytes, 0, index);
-//            }
-            out.write(input.read(bytes));
-//            export(out,"baodan.pdf");
+            request.setCharacterEncoding("UTF-8");
+            response.reset();
+            response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/force-download");
+            String fileName = "1111.pdf";
+            response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
+            byte[] bytes = new byte[1024 * 10];
+            int len;
+            while ((len = input.read(bytes)) != -1) {
+                response.getOutputStream().write(bytes, 0, len);
+            }
+            response.getOutputStream().flush();
+            response.flushBuffer();
+            input.close();
         } catch (IOException ex){
             ex.printStackTrace();
-        } finally {
-            if(input != null){
-                input.close();
-            }
-            if(out != null){
-                out.close();
-            }
         }
     }
 

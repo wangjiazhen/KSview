@@ -236,6 +236,7 @@ public class DeclartionCtrl {
 
 
     @RequestMapping("/downdeclUrlImage")
+    @ResponseBody
     public void filedownbydeclUrlImage(String  declUrl, HttpServletRequest request, HttpServletResponse response) {
         ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"接口成功");
         try {
