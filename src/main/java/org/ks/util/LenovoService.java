@@ -331,7 +331,7 @@ public class LenovoService {
             response.reset();
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/force-download");
-            String fileName = "1111.pdf";
+            String fileName = System.currentTimeMillis()+".pdf";
             response.addHeader("Content-Disposition", "attachment;filename=" + fileName);
             byte[] bytes = new byte[1024 * 10];
             int len;
