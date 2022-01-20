@@ -148,21 +148,6 @@ public class DeclartionCtrl {
 
     }
 
-    @RequestMapping("/declyulan")
-    public ResultInfo declyulan(String  declUrlImage) {
-        ResultInfo re = new ResultInfo(StatusCodeEnum.OK,"成功");
-        String url="";
-        log.info("当前declUrl为:"+declUrlImage);
-        try {
-            url=lenovoService.getPreviewUrlForPath(declUrlImage);
-
-        }catch ( Exception e ){
-            log.error(e.getMessage());
-        }
-        re.setData(url);
-        return re;
-    }
-
     /**
      * 保存登录信息
      * @param
@@ -246,5 +231,23 @@ public class DeclartionCtrl {
         }
 
     }
+
+    /****
+     * 预览pdf
+     * @param response
+     * @param filePathName
+     * @throws Exception
+     */
+    @RequestMapping("/images")
+    public void images(HttpServletResponse response,String filePathName) throws Exception {
+//        String filePathName="/Application/1.153/G/filepdf/2022/01/20/1642652151473.pdf";
+        String uuid=lenovoService.getUUID()+".pdf";
+        String toPathName="E:\\file\\template\\"+uuid;
+        lenovoService.downFile(filePathName,toPathName,response);
+        boolean bl=lenovoService.deleteFiles(toPathName);
+    }
+
+
+
 }
 

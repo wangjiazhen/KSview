@@ -114,7 +114,7 @@ public class LenovoService {
         return fileClient;
     }
 
-    private static String getUUID() {
+    public  String getUUID() {
         String s = UUID.randomUUID().toString();
         // 去掉“-”符号
         return s.substring(0, 8)
@@ -136,12 +136,9 @@ public class LenovoService {
             String pathType = getLxyPathType();
             FileModel fileModel = getFileClient().uploadFile(lenovoPath, pathType, fileInputStream, getUserModel().getSession());
             log.info("上传成功");
-//            PreviewModel previewUrl = getFileClient().getPreviewUrl(fileModel.getNeid(), null, getUserModel().getSession());
             log.info(lenovoPath);
-            //pdf转成图片
-            String images=pdfToPng(lenovoname,filePath);
 //            boolean bl=deleteFiles(filePath);
-            return lenovoPath+"&"+images;
+            return lenovoPath;
         }catch (Exception e){
             deleteFiles(filePath);
             return "";
@@ -166,7 +163,7 @@ public class LenovoService {
     }
 
     /**
-     * 根据文件路径获取文件预览地址
+     * 根据文件路径获取文件预览地址---预览的图片不清楚
      * @param filePathName 文件全路径
      */
     public String getPreviewUrlForPath(String filePathName)throws Exception{
@@ -188,7 +185,6 @@ public class LenovoService {
         FileModel fileModel=null;
         for (int i = 0; i < rootDrives.length; i++) {
             try{
-//                G/filepdf/2022/01/18/1642503359538.png
                 fileModel = fileClient.getFileByPath(filePathName, lxyPathType, getUserModel().getSession());
                 if(fileModel != null){
                     break;
@@ -198,97 +194,6 @@ public class LenovoService {
             }
         }
         return fileModel;
-    }
-
-    /**
-     * pdf转png图片
-     * @param sourceFilePath 源文件路径
-     * @param targetFilePath 目标文件路径
-     * @return
-     */
-    public static final String IMAGE_PNG = "png";
-    public  String  pdfToPng(String sourceFilePath,String targetFilePath) {
-        String prefixName = targetFilePath.substring(0, targetFilePath.lastIndexOf("."))+"."+IMAGE_PNG;
-        String flag = "";
-        PDDocument doc = null;
-        try {
-            String dir = targetFilePath.substring(0, targetFilePath.lastIndexOf("\\"));
-            File dirfile = new File(dir);
-            if(!dirfile.exists()){
-                dirfile.mkdirs();
-            }
-//            dir+filename+"."+IMAGE_PNG
-            FileInputStream fis = new FileInputStream(new File(targetFilePath));
-            doc = PDDocument.load(fis);
-            PDFRenderer renderer = new PDFRenderer(doc);
-            int pages = doc.getNumberOfPages();
-            //设置最大宽度和总长度
-            int maxWidth = 0;
-            int sumHeight = 0;
-            List<BufferedImage> listbi = new ArrayList<BufferedImage>();
-            // 获取pdf文件流
-            for(int i = 0 ; i < pages; i++){
-                BufferedImage imageBuffer = renderer.renderImageWithDPI(i, 150, ImageType.RGB);
-                int width = imageBuffer.getWidth();
-                int height = imageBuffer.getHeight();
-                if (width > maxWidth){
-                    maxWidth = width;
-                }
-                sumHeight += height;
-                listbi.add(imageBuffer);
-            }
-            //pdf分别转图片后合并
-            BufferedImage imageNew = new BufferedImage(maxWidth,sumHeight,BufferedImage.TYPE_INT_RGB);
-            int nowHeight = 0;
-            for (BufferedImage bi : listbi) {
-                int width = bi.getWidth();
-                int height = bi.getHeight();
-                int[] imageRgbArray = new int[width *  height];
-                imageRgbArray = bi.getRGB(0, 0, width, height, imageRgbArray, 0, width);
-                imageNew.setRGB(0, nowHeight, width, height, imageRgbArray, 0, width);
-                nowHeight += height;
-            }
-            ImageIO.write(imageNew, IMAGE_PNG, new File(prefixName));
-            String imagesurl=lenvoFileUploadimages(prefixName,"."+IMAGE_PNG);
-            flag = imagesurl;
-        } catch (IOException e) {
-            System.out.println("CommonUtils.pdfToPng error");
-            e.printStackTrace();
-        }finally{
-            if(doc != null){
-                try {
-                    doc.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        return flag;
-
-    }
-
-
-//pdf转成的图片上传到联想云
-    public String lenvoFileUploadimages(String  filePath, String suffixName) {
-        try{
-            InputStream fileInputStream = new FileInputStream(filePath);
-            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");//设置日期格式
-            System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
-
-            String lenovoname = "/Application/1.153/G/filepdf/"+df.format(new Date())+"/"+ System.currentTimeMillis()+"";
-            String lenovoPath=lenovoname+suffixName;
-            String pathType = getLxyPathType();
-            FileModel fileModel = getFileClient().uploadFile(lenovoPath, pathType, fileInputStream, getUserModel().getSession());
-            log.info("上传成功");
-//            PreviewModel previewUrl = getFileClient().getPreviewUrl(fileModel.getNeid(), null, getUserModel().getSession());
-            log.info(lenovoPath);
-//            boolean bl=deleteFiles(filePath);
-            return lenovoPath;
-        }catch (Exception e){
-            deleteFiles(filePath);
-            return "";
-        }
     }
 
     //pdf文件下载
@@ -317,14 +222,7 @@ public class LenovoService {
      * @param input 输入流
      * @throws IOException IOException
      */
-    public void writeToLocal(InputStream input, HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-//        //destination路径不存在则新建
-//        File fPath = new File(destination);
-//        File f = new File(fPath.getParent());
-//        if(!f.exists()){
-//            f.mkdirs();
-//        }
+    public void writeToLocal(InputStream input, HttpServletRequest request, HttpServletResponse response) {
         response.setContentType("multipart/form-data");
         try{
             request.setCharacterEncoding("UTF-8");
@@ -346,18 +244,58 @@ public class LenovoService {
         }
     }
 
-    private ResponseEntity<OutputStream> export(OutputStream os, String fileName) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Content-Disposition", "attachment; filename=" + System.currentTimeMillis() + fileName);
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
-        return ResponseEntity.ok().headers(headers).contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(os);
+    /**
+     * 根据路径下载单个文件
+     * @param filePathName 文件云端路径(文件全路径)
+     * @param toPathName 下载后文件保存路径 (文件全路径)
+     */
+    public void downFile(String filePathName,String toPathName,HttpServletResponse response)throws Exception{
+        //获取文件信息(判断文件是否存在 不存在抛出异常)
+        FileModel fileModel = downFileClick(filePathName);
+        if(fileModel == null){
+            throw new XFRuntimeException("文件不存在["+filePathName+"]");
+        }
+        if(fileModel.getDir()){
+            //不能下载文件目录
+            //throw new XFRuntimeException("不能下载文件目录["+filePathName+"]");
+            return;
+        }
+        InputStream ins = fileClient.downloadFile(fileModel.getPath(), lxyPathType, null, null, userModel.getSession());
+        writeToLocal1(toPathName,ins,response);
     }
 
+    /**
+     * 将InputStream写入本地文件
+     * @param destination 写入本地目录
+     * @param input 输入流
+     * @throws IOException IOException
+     */
+    public void writeToLocal1(String destination, InputStream input,HttpServletResponse response)
+            throws IOException {
+        //destination路径不存在则新建
+        File fPath = new File(destination);
+        File f = new File(fPath.getParent());
+        if(!f.exists()){
+            f.mkdirs();
+        }
+        int index;
+        byte[] bytes = new byte[1024];
+        FileOutputStream downloadFile = new FileOutputStream(destination);
+        while ((index = input.read(bytes)) != -1) {
+            downloadFile.write(bytes, 0, index);
+            downloadFile.flush();
+        }
+        input.close();
+        downloadFile.close();
 
-
-
-
+        FileInputStream is = new FileInputStream(destination);
+        int i = is.available(); // 得到文件大小
+        byte data[] = new byte[i];
+        is.read(data); // 读数据
+        is.close();
+        response.setContentType("image/*"); // 设置返回的文件类型
+        OutputStream toClient = response.getOutputStream(); // 得到向客户端输出二进制数据的对象
+        toClient.write(data); // 输出数据
+        toClient.close();
+    }
 }

@@ -200,7 +200,7 @@ public class DeclarationServiceImpl implements DeclarationService {
 
         List<TblDeclaration> tblDeclaration=declarationMapper.selectByPhone(mobilePhone);
         if(!CollectionUtils.isEmpty(tblDeclaration)){
-            return tblDeclaration.get(0).getDeclUrlImage();
+            return tblDeclaration.get(0).getDeclUrl();
         }
         return "";
     }
