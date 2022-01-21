@@ -54,6 +54,11 @@ public class LenovoService {
     @Value("${lxy.pathType}")
     private String lxyPathType;
 
+    @Value("${manualOperationPath}")
+    private String manualOperationPath;
+
+
+
     public String getLxyAddr() {
         return lxyAddr;
     }
@@ -130,14 +135,13 @@ public class LenovoService {
             InputStream fileInputStream = new FileInputStream(filePath);
             SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");//设置日期格式
             System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
-
-            String lenovoname = "/Application/1.153/G/filepdf/"+df.format(new Date())+"/"+ System.currentTimeMillis()+"";
+            String lenovoname = manualOperationPath+df.format(new Date())+"/"+ System.currentTimeMillis()+"";
             String lenovoPath=lenovoname+suffixName;
             String pathType = getLxyPathType();
             FileModel fileModel = getFileClient().uploadFile(lenovoPath, pathType, fileInputStream, getUserModel().getSession());
             log.info("上传成功");
             log.info(lenovoPath);
-//            boolean bl=deleteFiles(filePath);
+           deleteFiles(filePath);
             return lenovoPath;
         }catch (Exception e){
             deleteFiles(filePath);
@@ -297,5 +301,10 @@ public class LenovoService {
         OutputStream toClient = response.getOutputStream(); // 得到向客户端输出二进制数据的对象
         toClient.write(data); // 输出数据
         toClient.close();
+    }
+
+    public static void main(String[] args) {
+        String osName=System.getProperty("os.name");
+        System.out.println(osName);
     }
 }

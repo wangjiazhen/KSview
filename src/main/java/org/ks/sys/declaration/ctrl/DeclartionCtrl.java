@@ -10,12 +10,14 @@ import org.ks.sys.declaration.service.DeclarationService;
 import org.ks.sys.declaration.service.impl.DeclarationServiceImpl;
 import org.ks.sys.declaration.vo.ConditionalQueryDecl;
 import org.ks.sys.declaration.vo.ConditionalupdateDecl;
+import org.ks.util.Constant;
 import org.ks.util.LenovoService;
 import org.ks.util.RestHttpClientTest;
 import org.ks.util.ResultInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +44,12 @@ public class DeclartionCtrl {
     private LenovoService lenovoService;
     @Autowired
     private RestHttpClientTest restHttpClientTest;
+
+    @Value("${winfilePath}")
+    private String winfilePath;
+
+    @Value("${linuxfilePath}")
+    private String linuxfilePath;
 
     /**
      * 查询报单数据
@@ -112,7 +120,10 @@ public class DeclartionCtrl {
         // 获取文件全名a.py
         String fileName = file.getOriginalFilename();
 //         文件上传路径<br>
-        String templatePath = "E:/file/template/";
+        String templatePath = winfilePath;
+        if("L".equals(Constant.osName())){
+            templatePath=linuxfilePath;
+        }
         log.info("文件路径:" + templatePath);
         // 获取文件的后缀名
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
@@ -240,9 +251,11 @@ public class DeclartionCtrl {
      */
     @RequestMapping("/images")
     public void images(HttpServletResponse response,String filePathName) throws Exception {
-//        String filePathName="/Application/1.153/G/filepdf/2022/01/20/1642652151473.pdf";
         String uuid=lenovoService.getUUID()+".pdf";
-        String toPathName="E:\\file\\template\\"+uuid;
+        String toPathName=winfilePath+uuid;
+        if("L".equals(Constant.osName())){
+            toPathName=linuxfilePath+uuid;
+        }
         lenovoService.downFile(filePathName,toPathName,response);
         boolean bl=lenovoService.deleteFiles(toPathName);
     }
