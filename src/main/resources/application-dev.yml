@@ -46,23 +46,13 @@ lxy:
   pwd: qaz123
   pathType: ent
 
+#联想云上传路径 手动 自动
+manualOperationPath: /Application/1.153/G/filepdf/
+voluntarilyPath: /Application/1.153/G/voluntarilyfile/
 
-#mybatis:
-#  configuration:
-#    map-underscore-to-camel-case: true
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: '*'
-#  endpoint:
-#    nacos-discovery:
-#      enabled: true
-#    health:
-#      show-details: always
-#  server:
-#    servlet:
-#      context-path: ${server.servlet.context-path}/actuator
+#服务器附件存放路径
+winfilePath: E:/file/template/
+linuxfilePath: root/local/file/template
 
 
 
