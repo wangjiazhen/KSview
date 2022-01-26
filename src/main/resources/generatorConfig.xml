@@ -109,23 +109,23 @@
         <!--        password="xftm20210729" >-->
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/ceshi"
+                        connectionURL="jdbc:mysql://10.10.1.231:3306/ceshi"
                         userId="root"
-                        password="123456"
+                        password="qaz123"
         >
 
             <property name="remarksReporting" value="true"></property>
         </jdbcConnection>
 
-        <javaModelGenerator targetPackage="org.ks.sys.declaration.bean" targetProject="src/main/java" />
+        <javaModelGenerator targetPackage="org.ks.sys.joblog.bean" targetProject="src/main/java" />
 
-        <sqlMapGenerator targetPackage="sql.declaration" targetProject="src/main/resources" />
+        <sqlMapGenerator targetPackage="sql.joblog" targetProject="src/main/resources" />
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="org.ks.sys.declaration.mapper" targetProject="src/main/java" />
+        <javaClientGenerator type="XMLMAPPER" targetPackage="org.ks.sys.joblog.mapper" targetProject="src/main/java" />
 
         <!--        <table tableName ="deal"/>-->
         <!--        <table tableName ="pushmessage"/>-->
-        <table tableName ="tbl_declaration"/>
+        <table tableName ="joblog"/>
 
         <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver"-->
         <!--connectionURL="jdbc:mysql://10.10.1.180:3306/zhenai_ipcc_control"-->

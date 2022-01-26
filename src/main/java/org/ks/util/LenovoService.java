@@ -58,6 +58,10 @@ public class LenovoService {
     private String manualOperationPath;
 
 
+    @Value("${voluntarilyPath}")
+    private String voluntarilyPath;
+
+
 
     public String getLxyAddr() {
         return lxyAddr;
@@ -149,6 +153,25 @@ public class LenovoService {
         }
     }
 
+
+    //用户批量上传pdf文件
+    public String lenvoFileUploadall(String  filePath) {
+        try{
+            InputStream fileInputStream = new FileInputStream(filePath);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
+            System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
+            String pathname=filePath.substring(filePath.lastIndexOf("\\")+1);
+            String lenovoPath = voluntarilyPath+df.format(new Date())+"/"+pathname;
+            String pathType = getLxyPathType();
+            FileModel fileModel = getFileClient().uploadFile(lenovoPath, pathType, fileInputStream, getUserModel().getSession());
+            log.info("上传成功");
+            log.info(lenovoPath);
+            return fileModel.getResult();
+        }catch (Exception e){
+            return "losing";
+        }
+    }
+
     /***
      * 删除指定文件
      * @param pathName
@@ -165,6 +188,20 @@ public class LenovoService {
         //删除失败时，返回false
         return flag;
     }
+    public boolean existFiles(String pathName){
+        boolean flag = false;
+        //根据路径创建文件对象
+        File file = new File(pathName);
+        //路径存在
+        if(file.exists()){
+            flag = true;
+        }
+        //路径不存在时，返回false
+        return flag;
+    }
+
+
+
 
     /**
      * 根据文件路径获取文件预览地址---预览的图片不清楚

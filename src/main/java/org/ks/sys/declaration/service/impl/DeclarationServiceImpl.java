@@ -137,6 +137,28 @@ public class DeclarationServiceImpl implements DeclarationService {
     }
 
     @Override
+    public String insertbatch(TblDeclaration record) {
+        //根据手机号查询 如果有数据 就进行修改 没有的话 直接新增
+        List<TblDeclaration> tblDeclarations=declarationMapper.selectByQueryDeclphone(record.getMobilePhone());
+        LocalDateTime now = LocalDateTime.now();
+        if(tblDeclarations.size()>0){
+          tblDeclarations.get(0).setUpdateTime(LocalDateTimeUtil.getDate(now));
+          tblDeclarations.get(0).setUpdateAcct("admin");
+          tblDeclarations.get(0).setDeclUrl(record.getDeclUrl());
+          tblDeclarations.get(0).setDeclUrlAcct(record.getDeclUrlAcct());
+          declarationMapper.updateByPrimaryKey(tblDeclarations.get(0));
+          return "UPDATE";
+        }
+
+        record.setCreateAcct("admin");
+        record.setCreateTime(LocalDateTimeUtil.getDate(now));
+        record.setFlag(1);
+        declarationMapper.insert(record);
+        return "INSTAR";
+
+    }
+
+    @Override
     public TblDeclaration selectByPrimaryKey(Long declId) {
         TblDeclaration tblDeclaration=declarationMapper.selectByPrimaryKey(declId);
         return tblDeclaration;

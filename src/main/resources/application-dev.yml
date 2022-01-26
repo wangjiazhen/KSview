@@ -50,10 +50,21 @@ lxy:
 manualOperationPath: /Application/1.153/G/filepdf/
 voluntarilyPath: /Application/1.153/G/voluntarilyfile/
 
-#服务器附件存放路径
+#服务器附件手动存放路径
 winfilePath: E:/file/template/
 linuxfilePath: root/local/file/template
 
+#服件自动上传路径
+winvoluntarilyPath: E:/file/voluntarilytemplate/
+linuxvoluntarilyPath: root/local/file/voluntarilytemplate/
+
+#SFTP的地址账号密码
+SFTP:
+  host: 103.28.213.146
+  username: cqdb
+  password: cqdbzaq1!@
+  port: 22
+  path: /upload/ipload/
 
 
 
