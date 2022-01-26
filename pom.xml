@@ -193,6 +193,43 @@
             <version>3.11</version>
         </dependency>
 
+        <!--以下依赖是自定义依赖-->
+        <dependency>
+            <groupId>DrawnFilter</groupId>
+            <artifactId>bsApi</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>DrawnFilter</groupId>
+            <artifactId>leadu2.0</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>DrawnFilter</groupId>
+            <artifactId>lenovo-boxsdk-1.0</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>DrawnFilter</groupId>
+            <artifactId>lfasr-sdk-client-2.0.0.1007</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>DrawnFilter</groupId>
+            <artifactId>rt</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>DrawnFilter</groupId>
+            <artifactId>poi-3.11-20141221</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
 
     </dependencies>
     <build>
