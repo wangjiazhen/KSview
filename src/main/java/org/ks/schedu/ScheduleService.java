@@ -62,7 +62,7 @@ public class ScheduleService {
         Joblog joblog=new Joblog();
         try{
             joblog.setStarttime(new Date());
-
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
             Workbook wb =null;
             Sheet sheet = null;
             Row row = null;
@@ -71,7 +71,7 @@ public class ScheduleService {
             String filePath=exclPath;
 //            String filePath = "D:\\Desktop\\20220120\\20220120.xlsx";
             String columns[] = {"realname","mobilephone","declurl"};
-            String extString = filePath.substring(filePath.indexOf("/")+1,filePath.lastIndexOf("/"));
+            String extString = filePath.substring(filePath.indexOf("/"),filePath.lastIndexOf("/"));
             wb = TestEXCLpoi.readExcel(filePath);
             if(wb != null){
                 //用来存放表中数据
@@ -116,7 +116,7 @@ public class ScheduleService {
                 TblDeclaration record=new TblDeclaration();
                 record.setRealName(map.get("realname"));
                 record.setMobilePhone(map.get("mobilephone"));
-                record.setDeclUrl(voluntarilyPath+extString+"/"+map.get("declurl"));
+                record.setDeclUrl(voluntarilyPath+df.format(new Date())+"/"+map.get("declurl"));
                 record.setDeclUrlAcct(map.get("declurl"));
                 String type=declarationService.insertbatch(record);
                 if("UPDATE".equals(type)){
