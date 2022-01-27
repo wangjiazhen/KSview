@@ -9,9 +9,9 @@ spring:
       #dataSource Pool configuration
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.jdbc.Driver
-      url: jdbc:mysql://10.20.14.24:3306/kswechat?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8
+      url: jdbc:mysql://10.20.16.24:3306/kswechat?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8
       username: root
-      password: qaz123
+      password: qwe.123
       initialSize: 5
       minIdle: 5
       maxActive: 80
@@ -52,11 +52,11 @@ voluntarilyPath: /Application/1.153/G/voluntarilyfile/
 
 #服务器附件手动存放路径
 winfilePath: E:/file/template/
-linuxfilePath: root/local/file/template
+linuxfilePath: /home/ks/local/file/template/
 
 #服件自动上传路径
 winvoluntarilyPath: E:/file/voluntarilytemplate/
-linuxvoluntarilyPath: root/local/file/voluntarilytemplate/
+linuxvoluntarilyPath: /home/ks/local/file/voluntarilytemplate/
 
 #SFTP的地址账号密码
 SFTP:

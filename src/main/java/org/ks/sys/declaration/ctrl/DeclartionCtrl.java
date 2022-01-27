@@ -131,10 +131,14 @@ public class DeclartionCtrl {
                 dest0.getParentFile().mkdirs();
                 //检测文件是否存在
             }
+            log.info(String.valueOf(dest0.getParentFile().exists()));
+            log.info(String.valueOf(!dest0.getParentFile().exists()));
             if (!dest.exists()) {
-                dest.mkdirs();
+                log.info(String.valueOf(!dest.exists()));
+                    dest.createNewFile();
             }
             file.transferTo(dest);
+            log.info("进入上传联想云");
             //上传pdf
             String url= lenovoService.lenvoFileUpload(dest.getPath(),suffixName);
             if("".equals(url)){
@@ -145,6 +149,7 @@ public class DeclartionCtrl {
         } catch (Exception e) {
             re = new ResultInfo(StatusCodeEnum.failure,"上传失败");
             log.error("文件上传错误");
+            log.error(e.getMessage());
             return re;
         }
 

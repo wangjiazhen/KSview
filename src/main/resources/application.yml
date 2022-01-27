@@ -1,6 +1,7 @@
 spring:
   profiles:
-    active: dev
+    active: prod
+#    active: dev
 ##配置热部署启动
 #  devtools:
 #    restart:

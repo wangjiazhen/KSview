@@ -71,7 +71,7 @@ public class ScheduleService {
             String filePath=exclPath;
 //            String filePath = "D:\\Desktop\\20220120\\20220120.xlsx";
             String columns[] = {"realname","mobilephone","declurl"};
-            String extString = filePath.substring(filePath.lastIndexOf("\\")+1,filePath.lastIndexOf("\\")+9);
+            String extString = filePath.substring(filePath.indexOf("/")+1,filePath.lastIndexOf("/"));
             wb = TestEXCLpoi.readExcel(filePath);
             if(wb != null){
                 //用来存放表中数据
@@ -296,13 +296,9 @@ public class ScheduleService {
 
 
     public static void main(String[] args) {
-
-        Joblog joblog=new Joblog();
-//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-        joblog.setStarttime(new Date());
-
-        System.out.println(joblog);
-
+        String filePath="/file/voluntarilytemplate/20220127/20220127.xlsx";
+        String extString = filePath.substring(0,filePath.lastIndexOf("/"));
+        System.out.println(filePath.indexOf("/"));
     }
 
 }

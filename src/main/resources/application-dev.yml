@@ -52,11 +52,12 @@ voluntarilyPath: /Application/1.153/G/voluntarilyfile/
 
 #服务器附件手动存放路径
 winfilePath: E:/file/template/
-linuxfilePath: root/local/file/template
+linuxfilePath: /home/ks/local/file/template/
 
 #服件自动上传路径
 winvoluntarilyPath: E:/file/voluntarilytemplate/
-linuxvoluntarilyPath: root/local/file/voluntarilytemplate/
+linuxvoluntarilyPath: /home/ks/local/file/voluntarilytemplate/
+
 
 #SFTP的地址账号密码
 SFTP:
