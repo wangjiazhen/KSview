@@ -34,15 +34,29 @@ public class PullDataSchedule {
     private String winvoluntarilyPath;//sftp下载的文件win存放路径
     @Value("${linuxvoluntarilyPath}")
     private String linuxvoluntarilyPath;//sftp下载的文件linux存放路径
+
+
+
+    /**
+     * 定时拉sftp上的当天文件夹下的所有文件拉取到服务器中
+     */
+//    @Scheduled(cron = "0 0 0 * * ?")
+    public void PullPdfall()  {
+        log.info("当前执行的是sftp拉取当天文件夹下的所有文件");
+        scheduleService.SftpPdf();
+
+    }
+
+
     /**
      * 定时拉sftp上的excl将文件中的数据存储到数据库中
      */
-    @Scheduled(cron = "0 0 0 * * ?")
+//    @Scheduled(cron = "0 0 0 * * ?")
     public void Pushprocess()  {
         log.info("时推送process中的数据到腾讯云进行语音转文字定时器执行");
         Joblog joblog=new Joblog();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
-        log.info("根据当前时间"+df.format(new Date())+"将服务器当前日期文件夹下的所有pdf推送到联想云");
+        log.info("根据当前时间"+df.format(new Date())+"将服务器当前日期文件夹下xlsx文件下载到服务器");
         String exclPath = winvoluntarilyPath;
         if("L".equals(Constant.osName())){
             exclPath=linuxvoluntarilyPath;
@@ -67,22 +81,14 @@ public class PullDataSchedule {
     }
 
 
-    /**
-     * 定时拉sftp上的当天文件夹下的所有文件拉取到服务器中
-     */
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void PullPdfall()  {
-        log.info("当前执行的是sftp拉取当天文件夹下的所有文件");
-        scheduleService.SftpPdf();
 
-    }
 
 
 
     /**
      * 将从sftp中下载的文件上传到联想云
      */
-    @Scheduled(cron = "0 0 0 * * ?")
+//    @Scheduled(cron = "0 0 0 * * ?")
     public void PushPdfFile()  {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
         log.info("根据当前时间"+df.format(new Date())+"将服务器当前日期文件夹下的所有pdf推送到联想云");
@@ -92,6 +98,7 @@ public class PullDataSchedule {
         }
         exclPath+=df.format(df.format(new Date()));
         scheduleService.uploadPdfLenovo(exclPath);
+        boolean bl=lenovoService.deleteFiles(exclPath);
 
     }
 
