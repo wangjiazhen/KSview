@@ -130,6 +130,9 @@ public class ScheduleService {
             joblog.setSuccupdate(succupdate);
             log.info("当前日期总数据:"+count+"条，其中新增："+succinster+"修改："+succupdate);
             joblog.setException("当前日期总数据:"+count+"条，其中新增："+succinster+"修改："+succupdate);
+
+            //进行删除文件
+//            boolean bl=lenovoService.deleteFiles(exclPath);
         }catch (Exception e){
             log.error(e.getMessage());
             joblog.setException(e.getMessage());
