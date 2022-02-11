@@ -159,6 +159,7 @@ public class ScheduleService {
             String  resultType= lenovoService.lenvoFileUploadall(listPath.get(i).toString());
             if("success".equals(resultType)){
                 pdfsuccess++;
+                boolean bl=lenovoService.deleteFiles(listPath.get(i).toString());
                 continue;
             }
             pdflosing++;

@@ -98,7 +98,7 @@ public class PullDataSchedule {
         }
         exclPath+=df.format(df.format(new Date()));
         scheduleService.uploadPdfLenovo(exclPath);
-        boolean bl=lenovoService.deleteFiles(exclPath);
+
 
     }
 
