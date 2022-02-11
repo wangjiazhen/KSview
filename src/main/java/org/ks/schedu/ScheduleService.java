@@ -55,7 +55,7 @@ public class ScheduleService {
     private LenovoService lenovoService;
 
     /***
-     * 根据路径读取xlsx表格中的数据 写入数据库
+     * 根据路径读取xls表格中的数据 写入数据库
      * @param exclPath
      */
     public void readExcl(String exclPath){
@@ -275,13 +275,13 @@ public class ScheduleService {
                 if("pdf".equals(sufix)){
                     pdfcount++;
 //                    lenovoService.lenvoFileUploadall(list.get(i).toString());
-                }if("xlsx".equals(sufix)){
+                }if("xls".equals(sufix)){
                     xlsxcount++;
                 }
                 System.out.println(list.get(i));
             }
-            log.info("当前日期"+df.format(new Date())+"从sftp中获取的文件总数量:"+downpdfcount+"其中pdf文件的数量为"+pdfcount+"xlsx文件的数量为："+xlsxcount);
-            joblog.setException("当前日期"+df.format(new Date())+"从sftp中获取的文件总数量:"+downpdfcount+"其中pdf文件的数量为"+pdfcount+"xlsx文件的数量为："+xlsxcount);
+            log.info("当前日期"+df.format(new Date())+"从sftp中获取的文件总数量:"+downpdfcount+"其中pdf文件的数量为"+pdfcount+"xls文件的数量为："+xlsxcount);
+            joblog.setException("当前日期"+df.format(new Date())+"从sftp中获取的文件总数量:"+downpdfcount+"其中pdf文件的数量为"+pdfcount+"xls文件的数量为："+xlsxcount);
         } catch (Exception e) {
             joblog.setException(e.getMessage());
             e.printStackTrace();

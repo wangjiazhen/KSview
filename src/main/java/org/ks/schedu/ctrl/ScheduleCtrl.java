@@ -48,7 +48,7 @@ public class ScheduleCtrl {
         if("L".equals(Constant.osName())){
             exclPath=linuxvoluntarilyPath;
         }
-        exclPath+=df.format(new Date())+"/"+df.format(new Date())+".xlsx";
+        exclPath+=df.format(new Date())+"/"+df.format(new Date())+".xls";
 
         boolean exisboolean=lenovoService.existFiles(exclPath);
         if(exisboolean){

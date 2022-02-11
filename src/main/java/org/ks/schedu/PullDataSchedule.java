@@ -56,12 +56,12 @@ public class PullDataSchedule {
         log.info("时推送process中的数据到腾讯云进行语音转文字定时器执行");
         Joblog joblog=new Joblog();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
-        log.info("根据当前时间"+df.format(new Date())+"将服务器当前日期文件夹下xlsx文件下载到服务器");
+        log.info("根据当前时间"+df.format(new Date())+"将服务器当前日期文件夹下xls文件下载到服务器");
         String exclPath = winvoluntarilyPath;
         if("L".equals(Constant.osName())){
             exclPath=linuxvoluntarilyPath;
         }
-        exclPath+=df.format(new Date())+"/"+df.format(new Date())+".xlsx";
+        exclPath+=df.format(new Date())+"/"+df.format(new Date())+".xls";
 
         boolean exisboolean=lenovoService.existFiles(exclPath);
         if(exisboolean){
