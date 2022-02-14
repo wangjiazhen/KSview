@@ -41,7 +41,7 @@ public class PullDataSchedule {
     /**
      * 定时拉sftp上的当天文件夹下的所有文件拉取到服务器中
      */
-//    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "00 00 00 * * ?")
     public void PullPdfall()  {
         log.info("当前执行的是sftp拉取当天文件夹下的所有文件");
         scheduleService.SftpPdf();
@@ -52,14 +52,14 @@ public class PullDataSchedule {
     /**
      * 定时拉sftp上的excl将文件中的数据存储到数据库中
      */
-//    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "00 00 01 * * ?")
     public void Pushprocess()  {
+        log.info("执行手动读取当天的xlsx文件的数据");
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, -1);
-        log.info("时推送process中的数据到腾讯云进行语音转文字定时器执行");
+        calendar.add(calendar.DATE, -1);
         Joblog joblog=new Joblog();
-        log.info("根据当前时间"+df.format(new Date())+"将服务器当前日期文件夹下xls文件下载到服务器");
+        log.info("根据当前时间"+df.format(calendar.getTime())+"将服务器当前日期文件夹下的所有pdf推送到联想云");
         String exclPath = winvoluntarilyPath;
         if("L".equals(Constant.osName())){
             exclPath=linuxvoluntarilyPath;
@@ -81,6 +81,7 @@ public class PullDataSchedule {
         }
 
 
+
     }
 
 
@@ -91,7 +92,7 @@ public class PullDataSchedule {
     /**
      * 将从sftp中下载的文件上传到联想云
      */
-//    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 00 02 * * ?")
     public void PushPdfFile()  {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
         Calendar calendar = Calendar.getInstance();
@@ -101,7 +102,7 @@ public class PullDataSchedule {
         if("L".equals(Constant.osName())){
             exclPath=linuxvoluntarilyPath;
         }
-        exclPath+=df.format(df.format(calendar.getTime()));
+        exclPath+=df.format(calendar.getTime());
         scheduleService.uploadPdfLenovo(exclPath);
 
 

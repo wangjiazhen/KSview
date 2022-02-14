@@ -6,6 +6,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.ks.sys.declaration.bean.TblDeclaration;
+import org.ks.sys.declaration.mapper.TblDeclarationMapper;
 import org.ks.sys.declaration.service.DeclarationService;
 import org.ks.sys.joblog.bean.Joblog;
 import org.ks.sys.joblog.mapper.JoblogMapper;
@@ -54,6 +55,8 @@ public class ScheduleService {
     private JoblogMapper joblogMapper;
     @Autowired
     private LenovoService lenovoService;
+    @Autowired
+    private TblDeclarationMapper declarationMapper;
 
     /***
      * 根据路径读取xls表格中的数据 写入数据库
@@ -122,10 +125,21 @@ public class ScheduleService {
                 record.setMobilePhone(map.get("mobilephone"));
                 record.setDeclUrl(voluntarilyPath+df.format(calendar.getTime())+"/"+map.get("declurl"));
                 record.setDeclUrlAcct(map.get("declurl"));
-                String type=declarationService.insertbatch(record);
-                if("UPDATE".equals(type)){
+                //根据手机号查询 如果有数据 就进行修改 没有的话 直接新增
+                List<TblDeclaration> tblDeclarations=declarationMapper.selectByQueryDeclphone(record.getMobilePhone());
+                LocalDateTime now = LocalDateTime.now();
+                if(tblDeclarations.size()>0){
+                    tblDeclarations.get(0).setUpdateTime(LocalDateTimeUtil.getDate(now));
+                    tblDeclarations.get(0).setUpdateAcct("admin");
+                    tblDeclarations.get(0).setDeclUrl(record.getDeclUrl());
+                    tblDeclarations.get(0).setDeclUrlAcct(record.getDeclUrlAcct());
+                    declarationMapper.updateByPrimaryKey(tblDeclarations.get(0));
                     succupdate++;
                 }else{
+                    record.setCreateAcct("admin");
+                    record.setCreateTime(LocalDateTimeUtil.getDate(now));
+                    record.setFlag(1);
+                    declarationMapper.insert(record);
                     succinster++;
                 }
             }
