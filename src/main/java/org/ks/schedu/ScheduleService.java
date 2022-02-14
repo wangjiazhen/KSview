@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -59,10 +60,13 @@ public class ScheduleService {
      * @param exclPath
      */
     public void readExcl(String exclPath){
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
         Joblog joblog=new Joblog();
         try{
             joblog.setStarttime(new Date());
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
+
             Workbook wb =null;
             Sheet sheet = null;
             Row row = null;
@@ -116,7 +120,7 @@ public class ScheduleService {
                 TblDeclaration record=new TblDeclaration();
                 record.setRealName(map.get("realname"));
                 record.setMobilePhone(map.get("mobilephone"));
-                record.setDeclUrl(voluntarilyPath+df.format(new Date())+"/"+map.get("declurl"));
+                record.setDeclUrl(voluntarilyPath+df.format(calendar.getTime())+"/"+map.get("declurl"));
                 record.setDeclUrlAcct(map.get("declurl"));
                 String type=declarationService.insertbatch(record);
                 if("UPDATE".equals(type)){
@@ -132,7 +136,7 @@ public class ScheduleService {
             joblog.setException("当前日期总数据:"+count+"条，其中新增："+succinster+"修改："+succupdate);
 
             //进行删除文件
-//            boolean bl=lenovoService.deleteFiles(exclPath);
+            boolean bl=lenovoService.deleteFiles(exclPath);
         }catch (Exception e){
             log.error(e.getMessage());
             joblog.setException(e.getMessage());
@@ -248,7 +252,9 @@ public class ScheduleService {
      */
     public void SftpPdf() {
         Joblog joblog=new Joblog();
-
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
         joblog.setStarttime(new Date());
         joblog.setJobtype("从sftp下载文件");
         SFTPUtils sftp = null;
@@ -257,16 +263,15 @@ public class ScheduleService {
         int pdfcount=0;
         int xlsxcount=0;
         try {
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
             sftp = new SFTPUtils(host,port,username, password);//
             boolean connect = sftp.connect();
             log.info("sftp登录:"+connect);
-            String directory= path+df.format(new Date())+"/";
+            String directory= path+df.format(calendar.getTime())+"/";
             String templatePath = winvoluntarilyPath;
             if("L".equals(Constant.osName())){
                 templatePath=linuxvoluntarilyPath;
             }
-            templatePath+=df.format(new Date());
+            templatePath+=df.format(calendar.getTime());
             List<String> list = SFTPUtils.batchDownLoadFile(directory, templatePath);
             downpdfcount=list.size();
             for (int i = 0; i < list.size(); i++) {
@@ -299,10 +304,25 @@ public class ScheduleService {
     }
 
 
-    public static void main(String[] args) {
-        String filePath="/file/voluntarilytemplate/20220127/20220127.xlsx";
-        String extString = filePath.substring(0,filePath.lastIndexOf("/"));
-        System.out.println(filePath.indexOf("/"));
+    public static void main(String[] args) throws ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
+
+
+        SimpleDateFormat sj = new SimpleDateFormat("yyyyMMdd");
+        String today = "20220201";
+        Date d = sj.parse(today);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DATE, 1);
+        System.out.println("明天：" +      sj.format(calendar.getTime()));
+        //此时日期变为2015-12-01 ，所以下面的-2，
+        //理论上讲应该是2015-11-29
+        calendar.add(calendar.DATE, -2);
+        System.out.println("前天：" + sj.format(calendar.getTime()));
+
+//        String filePath="/file/voluntarilytemplate/20220127/20220127.xlsx";
+//        String extString = filePath.substring(0,filePath.lastIndexOf("/"));
+//        System.out.println(filePath.indexOf("/"));
     }
 
 }

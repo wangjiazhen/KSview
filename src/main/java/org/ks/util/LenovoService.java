@@ -159,12 +159,14 @@ public class LenovoService {
         try{
             InputStream fileInputStream = new FileInputStream(filePath);
             SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
-            System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(calendar.DATE, -1);
+            System.out.println(df.format(calendar.getTime()));// new Date()为获取当前系统时间
             String pathname=filePath.substring(filePath.lastIndexOf("\\")+1);
             if("L".equals(Constant.osName())){
                 pathname=filePath.substring(filePath.lastIndexOf("/")+1);
             }
-            String lenovoPath = voluntarilyPath+df.format(new Date())+"/"+pathname;
+            String lenovoPath = voluntarilyPath+df.format(calendar.getTime())+"/"+pathname;
             log.info("上传的pdf 地址==="+lenovoPath);
             String pathType = getLxyPathType();
             FileModel fileModel = getFileClient().uploadFile(lenovoPath, pathType, fileInputStream, getUserModel().getSession());

@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 @Component
@@ -53,15 +54,17 @@ public class PullDataSchedule {
      */
 //    @Scheduled(cron = "0 0 0 * * ?")
     public void Pushprocess()  {
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
         log.info("时推送process中的数据到腾讯云进行语音转文字定时器执行");
         Joblog joblog=new Joblog();
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
         log.info("根据当前时间"+df.format(new Date())+"将服务器当前日期文件夹下xls文件下载到服务器");
         String exclPath = winvoluntarilyPath;
         if("L".equals(Constant.osName())){
             exclPath=linuxvoluntarilyPath;
         }
-        exclPath+=df.format(new Date())+"/"+df.format(new Date())+".xls";
+        exclPath+=df.format(calendar.getTime())+"/"+df.format(calendar.getTime())+".xls";
 
         boolean exisboolean=lenovoService.existFiles(exclPath);
         if(exisboolean){
@@ -91,12 +94,14 @@ public class PullDataSchedule {
 //    @Scheduled(cron = "0 0 0 * * ?")
     public void PushPdfFile()  {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -1);
         log.info("根据当前时间"+df.format(new Date())+"将服务器当前日期文件夹下的所有pdf推送到联想云");
         String exclPath = winvoluntarilyPath;
         if("L".equals(Constant.osName())){
             exclPath=linuxvoluntarilyPath;
         }
-        exclPath+=df.format(df.format(new Date()));
+        exclPath+=df.format(df.format(calendar.getTime()));
         scheduleService.uploadPdfLenovo(exclPath);
 
 

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -40,15 +41,16 @@ public class ScheduleCtrl {
     @RequestMapping("/xlsxread")
     public void xlsxread() {
         log.info("执行手动读取当天的xlsx文件的数据");
-//        String exclPath="D:\\Desktop\\20220120\\20220120.xlsx";
-        Joblog joblog=new Joblog();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
-        log.info("根据当前时间"+df.format(new Date())+"将服务器当前日期文件夹下的所有pdf推送到联想云");
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(calendar.DATE, -1);
+        Joblog joblog=new Joblog();
+        log.info("根据当前时间"+df.format(calendar.getTime())+"将服务器当前日期文件夹下的所有pdf推送到联想云");
         String exclPath = winvoluntarilyPath;
         if("L".equals(Constant.osName())){
             exclPath=linuxvoluntarilyPath;
         }
-        exclPath+=df.format(new Date())+"/"+df.format(new Date())+".xls";
+        exclPath+=df.format(calendar.getTime())+"/"+df.format(calendar.getTime())+".xls";
 
         boolean exisboolean=lenovoService.existFiles(exclPath);
         if(exisboolean){
@@ -72,12 +74,14 @@ public class ScheduleCtrl {
     @RequestMapping("/uploadallPdf")
     public void uploadallPdf() {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");//设置日期格式
-        log.info("根据当前时间"+df.format(new Date())+"将服务器当前日期文件夹下的所有pdf推送到联想云");
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(calendar.DATE, -1);
+        log.info("根据当前时间"+df.format(calendar.getTime())+"将服务器当前日期文件夹下的所有pdf推送到联想云");
         String exclPath = winvoluntarilyPath;
         if("L".equals(Constant.osName())){
             exclPath=linuxvoluntarilyPath;
         }
-        exclPath+=df.format(new Date());
+        exclPath+=df.format(calendar.getTime());
         scheduleService.uploadPdfLenovo(exclPath);
 
     }
