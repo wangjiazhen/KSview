@@ -1,6 +1,7 @@
 package org.ks.util;
 
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lenovo.css.boxsdk.client.BoxClient;
 import com.lenovo.css.boxsdk.client.ClientFactory;
@@ -101,26 +102,55 @@ public class LenovoService {
     private UserModel userModel;
     private FileClient fileClient;
 
-    public UserModel getUserModel() {
-        if (fileClient == null || userModel == null) {
-            getFileClient();
-        }
-        return userModel;
-    }
+//    public UserModel getUserModel() {
+//        if (fileClient == null || userModel == null) {
+//            getFileClient();
+//        }
+//        return userModel;
+//    }
 
-    public FileClient getFileClient() {
-        if (fileClient == null) {
-            boxClient = new BoxClient(lxyAddr);
-            userClient = new ClientFactory(boxClient).getUserClient();
-            try {
-                userModel = userClient.login(lxyUser, lxyPwd);
-                log.info(objectMapper.writeValueAsString(userModel));
-            } catch (Exception e) {
-                log.error("联想云登录异常", e);
+//    public FileClient getFileClient() {
+//        if (fileClient == null) {
+//            boxClient = new BoxClient(lxyAddr);
+//            userClient = new ClientFactory(boxClient).getUserClient();
+//            try {
+//                userModel = userClient.login(lxyUser, lxyPwd);
+//                log.info(objectMapper.writeValueAsString(userModel));
+//            } catch (Exception e) {
+//                log.error("联想云登录异常", e);
+//            }
+//            fileClient = new ClientFactory(boxClient).getFileClient();
+//        }
+//        return fileClient;
+//    }
+	
+	public LenovoService(){
+        Thread t = new Thread(new Runnable(){  
+            public void run(){
+             long refreshTokenIdTime = 1 * 60 * 60 * 1000; // tokenId刷新时间(单位ms) 默认1小时;
+             while (true) {
+                    try {
+                     WebLogs.getLogger().info("*******************Lenovo file login*************");
+                     boxClient = new BoxClient(lxyAddr);
+                     userClient = new ClientFactory(boxClient).getUserClient();
+                     userModel = userClient.login(lxyUser, lxyPwd);
+                     WebLogs.getLogger().info(JSON.toJSONString(userModel));
+                     
+                     fileClient = new ClientFactory(boxClient).getFileClient();
+                     WebLogs.getLogger().info("*******************Lenovo file login success*************");
+                    } catch (Exception e) {
+                     WebLogs.getLogger().error("LenovoFileClient login login error",e);
+                    }finally{
+                     try {
+       Thread.sleep(refreshTokenIdTime);
+      } catch (InterruptedException e) {
+       e.printStackTrace();
+      }
+                    }
+             }
             }
-            fileClient = new ClientFactory(boxClient).getFileClient();
-        }
-        return fileClient;
+        });  
+        t.start();
     }
 
     public  String getUUID() {
@@ -142,7 +172,7 @@ public class LenovoService {
             String lenovoname = manualOperationPath+df.format(new Date())+"/"+ System.currentTimeMillis()+"";
             String lenovoPath=lenovoname+suffixName;
             String pathType = getLxyPathType();
-            FileModel fileModel = getFileClient().uploadFile(lenovoPath, pathType, fileInputStream, getUserModel().getSession());
+            FileModel fileModel = fileClient.uploadFile(lenovoPath, pathType, fileInputStream, userModel.getSession());
             log.info("上传成功");
             log.info(lenovoPath);
            deleteFiles(filePath);
@@ -169,7 +199,7 @@ public class LenovoService {
             String lenovoPath = voluntarilyPath+df.format(calendar.getTime())+"/"+pathname;
             log.info("上传的pdf 地址==="+lenovoPath);
             String pathType = getLxyPathType();
-            FileModel fileModel = getFileClient().uploadFile(lenovoPath, pathType, fileInputStream, getUserModel().getSession());
+            FileModel fileModel = fileClient.uploadFile(lenovoPath, pathType, fileInputStream, userModel.getSession());
             log.info("上传成功");
             log.info(lenovoPath);
             return fileModel.getResult();
@@ -221,7 +251,7 @@ public class LenovoService {
         if(fileModel.getDir()){
             throw new XFRuntimeException("文件夹不能预览["+filePathName+"]");
         }
-        PreviewModel previewModel = fileClient.getPreviewUrl(fileModel.getPath(), lxyPathType,getUserModel().getSession());
+        PreviewModel previewModel = fileClient.getPreviewUrl(fileModel.getPath(), lxyPathType,userModel.getSession());
         return previewModel.getPreviewUrl();
     }
 
@@ -232,7 +262,7 @@ public class LenovoService {
         FileModel fileModel=null;
         for (int i = 0; i < rootDrives.length; i++) {
             try{
-                fileModel = fileClient.getFileByPath(filePathName, lxyPathType, getUserModel().getSession());
+                fileModel = fileClient.getFileByPath(filePathName, lxyPathType, userModel.getSession());
                 if(fileModel != null){
                     break;
                 }
@@ -259,7 +289,7 @@ public class LenovoService {
             //throw new XFRuntimeException("不能下载文件目录["+filePathName+"]");
             return;
         }
-        InputStream ins = fileClient.downloadFile(fileModel.getPath(), lxyPathType, null, null, getUserModel().getSession());
+        InputStream ins = fileClient.downloadFile(fileModel.getPath(), lxyPathType, null, null, userModel.getSession());
         writeToLocal(ins, request, response);
     }
 
@@ -347,7 +377,14 @@ public class LenovoService {
     }
 
     public static void main(String[] args) {
-        String osName=System.getProperty("os.name");
-        System.out.println(osName);
+       HashMap map=new HashMap();
+       Hashtable hashtable=new Hashtable();
+       map.put(null,null);
+//       map.put(null,"cesji");
+        hashtable.put("null","null");
+
+        System.out.println(map);
+        System.out.println(hashtable);
+
     }
 }
